@@ -1,0 +1,17 @@
+Put these definitions into some base page under which you put your Slim tests.
+
+Make sure that the following lines point to the path of your .PhpSlim installation. The runPhpSlim.php file must be in this directory.
+
+!define TEST_RUNNER {%PHP_SLIM_PATH%/runPhpSlim.php}
+!path %PHP_SLIM_PATH%/Examples
+
+!define TEST_SYSTEM {slim}
+!define COMMAND_PATTERN {php %m %p}
+!define PATH_SEPARATOR {:}
+
+
+Within this subwiki, you can run the test suite by hitting the [[Suite][PhpTests?suite]] button on the left.
+
+The >JunkTests are not supposed to pass.
+
+!contents -R2 -g -p -f -h

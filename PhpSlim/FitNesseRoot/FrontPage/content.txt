@@ -1,0 +1,7 @@
+!c !3 Welcome to the Wonderful World of !-FitNesse-!!
+
+You have a working installation of [[!-FitNesse-!][http://fitnesse.org]].
+
+This is a customized Wiki for PhpSlim.
+
+You can check, if your installation is configured correctly by using the PhpTests

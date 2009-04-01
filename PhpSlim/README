@@ -1,0 +1,35 @@
+PhpSlim is the PHP port of Robert C. Martin's Slim
+(Simple List Invocation Method).
+
+It is written an maintained by Gregor Gramlich.
+
+You need a copy of FitNesse to run the FitNesse wiki.
+Download the latest release (use the zip file) from
+http://fitnesse.org/FitNesseDevelopment.DownLoad
+
+You also need a working cli installation of php 5.1.2 or higher.
+There is no need for a php webserver installation.
+
+For the following instructions, we assume that this Readme
+file is under /path/to/PhpSlim on a Linux system.
+
+cd /path/to/PhpSlim
+php configure.php
+
+The configure.php script does some small installation checks and
+sets up the PhpTests wiki page with your paths.
+
+Then call the FitNesse run.sh / run.bat script from the 
+FitNesse zip file like this:
+
+run.sh -p 8070 -d /path/to/PhpSlim
+
+Browse to http://localhost:8070
+
+You may change the port (8070) to your needs.
+
+On Ubuntu machines, you have to replace the first line of the run.sh
+script from 
+#!/bin/sh
+to
+#!/bin/bash

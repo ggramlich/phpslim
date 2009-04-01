@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="PhpSlim" default="build" basedir="..">
+    <property name="log" location="build/log"/>
+
+    <target name="build" depends="phpunit,phpcs,stricttests">
+    </target>
+
+    <target name="phpcs">
+        <exec executable="phpcs" dir="" output="${log}/checkstyle.xml" failonerror="true">
+            <arg line="--report=checkstyle --standard=ZEND PhpSlim TestModule Examples"/>
+        </exec>
+    </target>
+    <target name="phpunit">
+        <exec executable="phpunit" dir="" failonerror="true">
+            <arg line="--log-xml ${log}/PhpSlim_phpunit.xml
+                PhpSlim_Tests_AllTests PhpSlim/Tests/AllTests.php" />
+        </exec>
+    </target>
+    <target name="stricttests">
+        <exec executable="php" dir="" failonerror="true">
+            <arg line="runtests.php" />
+        </exec>
+    </target>
+    <target name="zipAll">
+        <zip destfile="${log}/PhpSlimAll.zip"
+            basedir="."
+            excludes="build/log/**"
+        />
+    </target>
+</project>

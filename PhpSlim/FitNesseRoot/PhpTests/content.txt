@@ -1,0 +1,13 @@
+You need to configure the paths of your installation to run the PhpTests.
+
+Please run the configure.php script from your shell.
+
+Start your shell, then change the directory to your PhpSlim installation.
+{{{
+cd /path/to/PhpSlim
+}}}
+Then type
+{{{
+php configure.php
+}}}
+The configure script will replace this page by a customized version. After that reload this page in your browser.

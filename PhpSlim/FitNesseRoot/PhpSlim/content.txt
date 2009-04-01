@@ -1,0 +1,1 @@
+PhpSlim is the PHP port of [[Robert C. Martin][http://www.objectmentor.com/omTeam/martin_r.html]]'s  [[Slim][http://fitnesse.org/FitNesse.SliM]]. It is written an maintained by Gregor Gramlich.

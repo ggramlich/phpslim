@@ -1,0 +1,11 @@
+|test slim|
+|integer array|get integer array?|
+|1,2,3,4,5|[1, 2, 3, 4, 5]|
+|hello|[1]|
+|[1]|[1]|
+|1|[1]|
+|80,90|$V=|
+|$V|[80, 90]|
+
+
+
