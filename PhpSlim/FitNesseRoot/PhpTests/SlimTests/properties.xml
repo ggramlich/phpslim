@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<properties>
+	<Edit/>
+	<Files/>
+	<Help/>
+	<LastModified>20090402001028</LastModified>
+	<Properties/>
+	<RecentChanges/>
+	<Refactor/>
+	<Search/>
+	<Suite/>
+	<Suites/>
+	<SymbolicLinks>
+		<CommentTable>.SliM.CommentTable</CommentTable>
+		<TableTable>.SliM.TableTable</TableTable>
+		<QueryTable>.SliM.QueryTable</QueryTable>
+		<DecisionTable>.SliM.DecisionTable</DecisionTable>
+		<OrderedQueryTable>.SliM.OrderedQueryTable</OrderedQueryTable>
+		<ScriptTable>.SliM.ScriptTable</ScriptTable>
+	</SymbolicLinks>
+	<Versions/>
+	<WhereUsed/>
+	<saveId>1238620208752</saveId>
+	<ticketId>1605926155338297582</ticketId>
+</properties>

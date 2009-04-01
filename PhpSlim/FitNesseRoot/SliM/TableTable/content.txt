@@ -1,0 +1,148 @@
+|Table:Bowling|
+|3|5|4|/|X||X||3|4|6|/|7|2|3|4|9|-|4|/|3|
+||8 ||28||51||68||75||92||101||108||117|||130|
+
+The "Table" table allows you to write a fixture that accepts an arbitrary table, and returns a table of results.  The table of results has a similar geometry to the input table (without the first row). Each cell of the result table can be one of the following codes:
+
+|Comment|
+|''pass''|The original contents will be colored green.|
+|''pass:<message>''|The original contents will be replaced with <message> and colored green.|
+|''fail''|The original contents will be colored red.|
+|''fail:<message>''|The original contents will be replaced with <message> and colored red.|
+|''ignore''|The original contents will be colored grey.|
+|''ignore:<message>''|The original contents will be replaced with <message> and colored grey.|
+|''report:<message>''|The original contents will be replaced with <message>.|
+|''<empty string>'' or ''no change''|The corresponding cell will be unchanged|
+|''error:<message>''|The corresponding cell will be colored yellow and its contents will be ''<message>''|
+|''<anything else>''|The corresponding cell will be colored red, and its contents will be ''<anything else>''|
+
+The fixture is written with a !style_code(doTable) method.  This method takes a List argument and returns a List.  The incomming list is a list of rows.  Each row is a list of strings.  The returned list has a similar structure except that it does not have the first row.  If any row of the returned list is longer than the corresponding row of the incomming list, then the extra columns will be added to the colored table.  If there are extra rows, then they will be added too.  So the returned table can be larger, horizontally and vertically.  It cannot be smaller!  
+
+See [[Report Tables][>ReportTables]] to see how to use the different geometries to create reports.
+
+Here is the fixture for the above table.{{{
+class Examples_SlimTests_Bowling
+{
+    public function doTable($table)
+    {
+        $g = new Examples_SlimTests_Bowling_Game();
+        $rollResults = array(
+            "","","","","","","","","","","","","","","","","","","","",""
+        );
+        $scoreResults = array(
+            "","","","","","","","","","","","","","","","","","","","",""
+        );
+        $this->rollBalls($table, $g);
+        $this->evaluateScores($g, $table[1], $scoreResults);
+        return array($rollResults, $scoreResults);
+    }
+
+    private function evaluateScores($g, $scoreRow, &$scoreResults)
+    {
+        for ($frame = 0; $frame < 10; $frame++) {
+            $actualScore = $g->score($frame + 1);
+            $expectedScore = (int) $scoreRow[$this->frameCoordinate($frame)];
+            if ($expectedScore == $actualScore) {
+                $result = "pass";
+            } else {
+                $result = sprintf(
+                    "Was:%d, expected:%s.", $actualScore, $expectedScore
+                );
+            }
+            $scoreResults[$this->frameCoordinate($frame)] = $result;
+        }
+    }
+
+    private function frameCoordinate($frame)
+    {
+        return $frame < 9 ? $frame * 2 + 1 : $frame * 2 + 2;
+    }
+
+    private function rollBalls($table, $g)
+    {
+        $rollRow = $table[0];
+        for ($frame = 0; $frame < 10; $frame++) {
+            $firstRoll = $rollRow[$frame * 2];
+            $secondRoll = $rollRow[$frame * 2 + 1];
+            if (strtoupper($firstRoll) == "X") {
+                $g->roll(10);
+            } else {
+                $firstRollInt = 0;
+                if ($firstRoll == "-") {
+                    $g->roll(0);
+                } else {
+                    $firstRollInt = (int) $firstRoll;
+                    $g->roll($firstRollInt);
+                }
+                if ($secondRoll == "/") {
+                    $g->roll(10 - $firstRollInt);
+                } elseif ($secondRoll == "-") {
+                    $g->roll(0);
+                } else {
+                    $g->roll((int) $secondRoll);
+                }
+            }
+        }
+    }
+}
+
+
+class Examples_SlimTests_Bowling_Game
+{
+    private $_rolls = array();
+    private $_currentRoll = 0;
+
+    public function roll($pins)
+    {
+        $this->_rolls[$this->_currentRoll++] = $pins;
+    }
+
+    public function score($frame)
+    {
+        $score = 0;
+        $firstBall = 0;
+        for ($f = 0; $f < $frame; $f++) {
+            if ($this->isStrike($firstBall)) {
+                $score += 10 + $this->nextTwoBallsForStrike($firstBall);
+                $firstBall += 1;
+            } elseif ($this->isSpare($firstBall)) {
+                $score += 10 + $this->nextBallForSpare($firstBall);
+                $firstBall += 2;
+            } else {
+                $score += $this->twoBallsInFrame($firstBall);
+                $firstBall += 2;
+            }
+        }
+        return $score;
+    }
+
+    private function twoBallsInFrame($firstBall)
+    {
+        return $this->_rolls[$firstBall] + $this->_rolls[$firstBall + 1];
+    }
+
+    private function nextBallForSpare($firstBall)
+    {
+        if (empty($this->_rolls[$firstBall + 2])) {
+            return null;
+        }
+        return $this->_rolls[$firstBall + 2];
+    }
+
+    private function nextTwoBallsForStrike($firstBall)
+    {
+        return $this->_rolls[$firstBall + 1] + $this->_rolls[$firstBall + 2];
+    }
+
+    private function isSpare($firstBall)
+    {
+        $bothRolls = $this->_rolls[$firstBall] + $this->_rolls[$firstBall + 1];
+        return 10 == $bothRolls;
+    }
+
+    private function isStrike($firstBall)
+    {
+        return 10 == $this->_rolls[$firstBall];
+    }
+}
+}}}
