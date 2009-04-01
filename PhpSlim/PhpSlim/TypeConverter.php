@@ -14,6 +14,9 @@ class PhpSlim_TypeConverter
         if (self::isNumericArray($object)) {
             return self::inspectArray($object);
         }
+        if (is_bool($object)) {
+            return self::boolToString($object);
+        }
         if (is_float($object)) {
             return self::floatToString($object);
         }
@@ -30,7 +33,7 @@ class PhpSlim_TypeConverter
         }
         return sprintf('["%s"]', implode('", "', $array));
     }
-    
+
     private static function isNumericArray($array)
     {
         if (!is_array($array)) {
@@ -40,7 +43,7 @@ class PhpSlim_TypeConverter
         $upperKeyArray = array_change_key_case($array, CASE_UPPER);
         return $lowerKeyArray == $upperKeyArray;
     }
-    
+
     public static function floatToString($value)
     {
         $sign = ($value < 0)? '-': '';
@@ -53,6 +56,16 @@ class PhpSlim_TypeConverter
             $percent = substr($percent, 0, $lotsOfSubsequentZeros);
         }
         return $sign . sprintf('%01d.%01d%s', $int, (int)$fract, $percent);
+    }
+
+    public static function boolToString($value)
+    {
+        return $value ? 'true' : 'false';
+    }
+
+    public static function hashListToPairsList($hashList)
+    {
+        return array_map(array('self', 'hashToPairs'), $hashList);
     }
 
     public static function hashToPairs($hash)

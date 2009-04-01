@@ -1,7 +1,7 @@
 PhpSlim is the PHP port of Robert C. Martin's Slim
 (Simple List Invocation Method).
 
-It is written an maintained by Gregor Gramlich.
+It is written and maintained by Gregor Gramlich.
 
 You need a copy of FitNesse to run the FitNesse wiki.
 Download the latest release (use the zip file) from

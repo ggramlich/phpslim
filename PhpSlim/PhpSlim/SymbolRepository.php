@@ -41,8 +41,11 @@ class PhpSlim_SymbolRepository
         }
         $symbolKeys = array_keys($this->_symbols);
         $search = array_map(array($this, 'prependDollar'), $symbolKeys);
-        $dumpCallback = array('PhpSlim_TypeConverter', 'toString');
-        $replaceStrings = array_map($dumpCallback, $this->_symbols);
+        // I tried array_map for the following, but I got a warning.
+        $replaceStrings = array();
+        foreach ($this->_symbols as $symbolValue) {
+            $replaceStrings[] = PhpSlim_TypeConverter::toString($symbolValue);
+        }
         return str_replace($search, $replaceStrings, $item);
     }
 
