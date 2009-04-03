@@ -1,0 +1,3 @@
+!|Create Programs                                        |
+|Name |Channel|DayOfWeek|TimeOfDay|DurationInMinutes|id? |
+|House|4      |Monday   |19:00    |60               |$ID=|

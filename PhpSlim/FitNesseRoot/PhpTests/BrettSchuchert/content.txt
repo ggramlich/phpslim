@@ -1,0 +1,7 @@
+Tutorial series by Brett L. Schuchert
+
+http://schuchert.wikispaces.com/FitNesse.Tutorials
+
+Ported to .PhpSlim by Gregor Gramlich
+
+!contents
