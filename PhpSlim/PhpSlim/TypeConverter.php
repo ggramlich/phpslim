@@ -3,6 +3,9 @@ class PhpSlim_TypeConverter
 {
     public static function toString($object)
     {
+        if (is_string($object)) {
+            return $object;
+        }
         if (is_object($object)) {
             if (method_exists($object, 'toString')) {
                 return $object->toString();
@@ -61,6 +64,15 @@ class PhpSlim_TypeConverter
     public static function boolToString($value)
     {
         return $value ? 'true' : 'false';
+    }
+    
+    public static function toBool($string)
+    {
+        if (is_numeric($string)) {
+            return $string != 0;
+        }
+        $string = strtolower($string);
+        return $string == 'yes' || $string == 'true';
     }
 
     public static function hashListToPairsList($hashList)

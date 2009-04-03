@@ -16,10 +16,10 @@ class PhpSlim_ListDeserializer
         if (empty($string)) {
             self::raise("Can't deserialize empty string");
         }
-        if (substr($string, 0, 1) != '[') {
+        if (mb_substr($string, 0, 1) != '[') {
             self::raise("Serialized list has no starting [");
         }
-        if (substr($string, -1) != ']') {
+        if (mb_substr($string, -1) != ']') {
             self::raise("Serialized list has no ending ]");
         }
         $deserializer = new PhpSlim_ListDeserializer_Deserializer($string);

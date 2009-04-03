@@ -8,4 +8,9 @@
 |$V|[80, 90]|
 
 
+|simple script|
+|arg|get arg?|
+|Jürgen|Jürgen|
+|1|1|
+|ÄÖÜäöüß|ÄÖÜäöüß|
 

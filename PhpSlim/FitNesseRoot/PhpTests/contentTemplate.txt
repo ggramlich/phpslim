@@ -12,6 +12,6 @@ Make sure that the following lines point to the path of your .PhpSlim installati
 
 Within this subwiki, you can run the test suite by hitting the [[Suite][PhpTests?suite]] button on the left.
 
-The >JunkTests are not supposed to pass.
+The >JunkTests and >SlimTests are not supposed to pass.
 
 !contents -R2 -g -p -f -h

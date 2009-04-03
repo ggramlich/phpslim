@@ -18,8 +18,8 @@ class PhpSlim_ListSerializer
             if (is_array($item)) {
                 $item = self::serialize($item);
             }
-            $item = (string) $item;
-            $result .= self::lengthString(strlen($item));
+            $item = PhpSlim_TypeConverter::toString($item);
+            $result .= self::lengthString(mb_strlen($item));
             $result .= $item . ':';
         }
         $result .= ']';

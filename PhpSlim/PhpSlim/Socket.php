@@ -41,7 +41,7 @@ abstract class PhpSlim_Socket
             );
         }
         $len = (int) $len;
-        usleep($len * 10);
+        usleep($len * 20);
         $input = socket_read($this->_communicationSocket, $len);
         $this->log("Read: $input");
         return $input;

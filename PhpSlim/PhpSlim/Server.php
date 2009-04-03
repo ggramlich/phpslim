@@ -44,7 +44,19 @@ class PhpSlim_Server
         $length = $this->_socket->read(6);
         // Skip colon
         $this->_socket->read(1);
-        return $this->_socket->read($length);
+        return $this->readMultibytes($length);
+    }
+
+    private function readMultibytes($length)
+    {
+        $string = $this->_socket->read($length);
+        while (
+            mb_strlen($string) < $length &&
+            $this->_socket->hasReadableData()
+        ) {
+            $string .= $this->_socket->read($length - mb_strlen($string));
+        }
+        return $string;
     }
 
     private function processCommand($command)

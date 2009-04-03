@@ -12,10 +12,22 @@ class PhpSlim_Tests_ListSerializerTest extends PhpSlim_Tests_TestCase
         $this->assertSerializes(array("hello", "world"), $expect);
     }
 
+    public function testSerializeAWordWithMultibyteCharacter()
+    {
+        $expect = "[000001:000001:ü:]";
+        $this->assertSerializes(array("ü"), $expect);
+    }
+
     public function testSerializeANestedList()
     {
         $expect = "[000001:000024:[000001:000007:element:]:]";
         $this->assertSerializes(array(array("element")), $expect);
+    }
+
+    public function testSerializeANestedListWithMultibyteCharacter()
+    {
+        $expect = "[000001:000024:[000001:000007:ülement:]:]";
+        $this->assertSerializes(array(array("ülement")), $expect);
     }
 
     public function testSerializeAListWithANonString()

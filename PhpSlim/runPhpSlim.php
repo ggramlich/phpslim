@@ -1,4 +1,5 @@
 <?php
+mb_internal_encoding("UTF-8");
 $arguments = $_SERVER["argv"];
 $port = array_pop($arguments);
 $path = array_pop($arguments);

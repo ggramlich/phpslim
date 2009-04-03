@@ -37,7 +37,7 @@ class PhpSlim_SymbolRepository
     {
         if ($this->itemIsSymbol($item)) {
             // Single symbol, don't replace within string, can return object
-            return $this->getSymbol(substr($item, 1));
+            return $this->getSymbol(mb_substr($item, 1));
         }
         $symbolKeys = array_keys($this->_symbols);
         $search = array_map(array($this, 'prependDollar'), $symbolKeys);
@@ -51,10 +51,10 @@ class PhpSlim_SymbolRepository
 
     private function itemIsSymbol($item)
     {
-        if ('$' != substr($item, 0, 1)) {
+        if ('$' != mb_substr($item, 0, 1)) {
             return false;
         }
-        return $this->isSymbolSet(substr($item, 1));
+        return $this->isSymbolSet(mb_substr($item, 1));
     }
 
     private function prependDollar($key)

@@ -139,7 +139,7 @@ class PhpSlim_Statement
      */
     public function slimToPhpMethod($method)
     {
-        return strtolower(substr($method, 0, 1)) . substr($method, 1);
+        return strtolower(mb_substr($method, 0, 1)) . mb_substr($method, 1);
     }
 
     public static function inspectArray($array)

@@ -35,7 +35,7 @@ class PhpSlim_ListDeserializer_Deserializer
         $numberOfItems = $this->getLength();
         for ($i = 0; $i < $numberOfItems; $i++) {
             $lengthOfItem = $this->getLength();
-            $item = substr($this->_string, $this->_pos, $lengthOfItem);
+            $item = mb_substr($this->_string, $this->_pos, $lengthOfItem);
             $this->_pos += $lengthOfItem + 1;
             try {
                 $sublist = PhpSlim_ListDeserializer::deserialize($item);
@@ -52,10 +52,10 @@ class PhpSlim_ListDeserializer_Deserializer
      */
     private function getLength()
     {
-        $length = substr($this->_string, $this->_pos, 6);
+        $length = mb_substr($this->_string, $this->_pos, 6);
         $this->_pos += 7;
         if (!is_numeric($length)) {
-            $message = 'Wrong number format for length';
+            $message = 'Wrong number format for length, read ' . $length;
             throw new PhpSlim_ListDeserializer_SyntaxError($message);
         }
         return (int) $length;
