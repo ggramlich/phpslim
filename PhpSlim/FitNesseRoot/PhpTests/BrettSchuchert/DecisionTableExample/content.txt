@@ -1,5 +1,0 @@
-|Add Programs To Schedule                                                              |
-|name      |episode                      |channel|date     |start time|minutes|created?|
-|House M.D.|House Makes Wilson Mad       |7      |5/12/2008|7:00      |60     |true    |
-|Doctor Who|The One where He Saves the UK|12     |5/17/2008|8:00      |60     |true    |
-|Conflicts |Should not be added          |7      |5/12/2008|7:00      |30     |false   |

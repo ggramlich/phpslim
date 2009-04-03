@@ -2,14 +2,17 @@
 <properties>
 	<Edit/>
 	<Files/>
-	<Help></Help>
-	<LastModified>20090403115055</LastModified>
+	<Help/>
+	<LastModified>20090403134327</LastModified>
 	<Properties/>
 	<RecentChanges/>
 	<Refactor/>
 	<Search/>
 	<Suite/>
-	<Suites></Suites>
+	<Suites/>
+	<SymbolicLinks>
+		<DigitalVideoRecorderExamples>.DigitalVideoRecorderExamples</DigitalVideoRecorderExamples>
+	</SymbolicLinks>
 	<Versions/>
 	<WhereUsed/>
 	<saveId>1238754478923</saveId>

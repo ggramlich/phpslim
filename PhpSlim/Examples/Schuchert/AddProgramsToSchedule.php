@@ -10,16 +10,13 @@ class Schuchert_AddProgramsToSchedule
     private $_programName;
     private $_episodeName;
     private $_lastId;
+    private $_lastCreationSuccessful;
 
-    public function __construct()
+    public static function getSchedule()
     {
         if (empty(self::$_schedule)) {
             self::$_schedule = new Schuchert_DVR_Schedule();
         }
-    }
-
-    public static function getSchedule()
-    {
         return self::$_schedule;
     }
 
@@ -53,32 +50,39 @@ class Schuchert_AddProgramsToSchedule
         $this->_minutes = $minutes;
     }
    
-    public function created()
+    public function execute()
     {
         try {
-            $p = self::$_schedule->addProgram(
+            $p = self::getSchedule()->addProgram(
                 $this->_programName, $this->_episodeName, $this->_channel,
                 $this->buildStartDateTime(), $this->_minutes
             );
             $this->_lastId = $p->getId();
+            $this->_lastCreationSuccessful = true;
         } catch (Schuchert_DVR_ConflictingProgramException $e) {
-            $this->_lastId = 'n/a';
-            return false;
+            $this->_lastCreationSuccessful = false;
         }
-        return true;
+    }
+
+    public function created()
+    {
+        return $this->_lastCreationSuccessful;
     }
 
     public function lastId()
     {
-        return $this->_lastId;
+        if ($this->_lastCreationSuccessful) {
+            return $this->_lastId;
+        }
+        return 'n/a';
     }
 
     private function buildStartDateTime()
     {
         $dateTime = sprintf("%s %s", $this->_date, $this->_startTime);
-        $dateArray = strptime($dateTime, '%l/%e/%Y %H:%M:%S');
-        if (!empty($dateArray['unparsed'])) {
-            throw new RuntimeException("Unable to prase date/time", e);
+        $dateArray = strptime($dateTime, '%m/%d/%Y %H:%M');
+        if (false === $dateArray || !empty($dateArray['unparsed'])) {
+            throw new RuntimeException("Unable to parse date/time");
         }
         return $dateArray;
     }

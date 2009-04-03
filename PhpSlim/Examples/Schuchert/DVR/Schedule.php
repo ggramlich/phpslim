@@ -3,6 +3,11 @@ class Schuchert_DVR_Schedule
 {
     private $_scheduledPrograms = array();
  
+    public function clear()
+    {
+        $this->_scheduledPrograms = array();
+    }
+
     public function addProgram($programName, $episodeName, $channel,
         $startDateTime, $lengthInMinutes)
     {
@@ -28,6 +33,18 @@ class Schuchert_DVR_Schedule
                 break;
             }
         }
+    }
+
+    public function findProgramsNamedOn($programName, $channel)
+    {
+        $result = array();
+        foreach ($this->_scheduledPrograms as $program) {
+            if ($program->timeSlot->channel == $channel
+                && $program->programName == $programName) {
+                $result[] = $program;
+            }
+        }
+        return $result;
     }
 
     private function conflictsWithOtherTimeSlots($timeSlot)

@@ -16,4 +16,11 @@ class Schuchert_DVR_Program
     {
         return sprintf("(%s:%d)", $this->programName, $this->timeSlot->channel);
     }
+
+    public function sameEpisodeAs($program)
+    {
+        return ($this->timeSlot->channel == $program->timeSlot->channel)
+            && ($this->programName == $program->programName)
+            && ($this->episodeName == $program->episodeName);
+    }
 }

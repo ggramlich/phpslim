@@ -1,0 +1,7 @@
+|Create Season Pass For|P1|9|
+|id of program scheduled?   |
+|$ID=                       |
+ 
+|query:Episodes In To Do List|$ID                |
+|episodeName                 |date     |startTime|
+|E1                          |5/17/2008|7:00     |

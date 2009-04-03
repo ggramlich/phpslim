@@ -89,8 +89,13 @@ class PhpSlim_TypeConverter
         return $result;
     }
 
+    public static function objectListToPairsList($objects)
+    {
+        return array_map(array('self', 'objectToPairs'), $objects);
+    }
+
     public static function objectToPairs($object)
     {
-        return self::hashToPairs((array) $object);
+        return self::hashToPairs(get_object_vars($object));
     }
 }
