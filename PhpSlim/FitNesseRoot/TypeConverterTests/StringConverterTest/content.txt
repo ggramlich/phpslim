@@ -1,0 +1,10 @@
+Actually this is not converted, but we test for special characters.
+
+|test type converter|
+|string|get string?|
+|0|0|
+|0.1|0.1|
+|0.0|0.0|
+|-0.1|-0.1|
+|text|text|
+|Köln|Köln|
