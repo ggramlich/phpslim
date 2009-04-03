@@ -26,6 +26,17 @@ class PhpSlim_Tests_InstanceCreationTest extends PhpSlim_Tests_TestCase
         $this->assertEquals('3', $x->arg);
     }
 
+    public function testCreateAnInstanceWithArgumentsReplaceSymbol()
+    {
+        $this->_caller->setSymbol('v', 'bob');
+        $response = $this->_caller->create(
+            'x', 'TestModule_TestSlimWithArguments', array('$v')
+        );
+        $this->assertEquals('OK', $response);
+        $x = $this->_caller->instance('x');
+        $this->assertEquals('bob', $x->arg);
+    }
+
     public function testCantCreateInstanceWithTheWrongNumberOfArguments()
     {
         $result = $this->_caller->create(

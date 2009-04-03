@@ -15,7 +15,7 @@ class PhpSlim_StatementExecutor
     {
         try {
             $instance = $this->constructInstance(
-                $className, $constructorArguments
+                $className, $this->replaceSymbols($constructorArguments)
             );
             $this->_instances[$instanceName] = $instance;
             return 'OK';
@@ -36,8 +36,9 @@ class PhpSlim_StatementExecutor
                     throw new Exception;
                 }
             }
-            if (count($constructorArguments) !=
-                    $reflectionConstructor->getNumberOfParameters()) {
+            if (count($constructorArguments) <
+                    $reflectionConstructor->getNumberOfRequiredParameters()
+                ) {
                 throw new Exception;
             }
             return $classObject->newInstanceArgs($constructorArguments);
