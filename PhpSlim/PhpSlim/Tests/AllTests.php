@@ -13,7 +13,6 @@ class PhpSlim_Tests_AllTests
         'InstanceCreation',
         'MethodInvocation',
         'ListExecutor',
-//        'SocketService',
         'TypeConverter',
     );
 
