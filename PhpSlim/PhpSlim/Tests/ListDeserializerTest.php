@@ -101,6 +101,18 @@ class PhpSlim_Tests_ListDeserializerTest extends PhpSlim_Tests_TestCase
         $this->check();
     }
 
+    public function testDeserializeListsWithAMultibyteString()
+    {
+        $this->_list = array('Köln');
+        $this->check();
+    }
+
+    public function testDeserializeListsOfStringsThatEndWithAMultibyteString()
+    {
+        $this->_list = array('Kö');
+        $this->check();
+    }
+
     private function check()
     {
         $serialized = $this->serialize($this->_list);
