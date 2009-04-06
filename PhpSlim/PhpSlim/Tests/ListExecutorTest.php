@@ -199,4 +199,14 @@ class PhpSlim_Tests_ListExecutorTest extends PhpSlim_Tests_TestCase
         $result = $this->getResult('id', $results);
         $this->assertContains(PhpSlim::EXCEPTION_TAG, $result);
     }
+
+    public function testSurviveExecutingAnErrorNoExceptionForLowErrorLevel()
+    {
+        $this->addStatement("id", "call", "testSlim", "triggerError");
+        $oldLevel = error_reporting(E_ALL ^ E_WARNING);
+        $results = $this->execute();
+        error_reporting($oldLevel);
+        $result = $this->getResult('id', $results);
+        $this->assertFalse($result);
+    }
 }

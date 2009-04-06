@@ -85,7 +85,9 @@ class PhpSlim_StatementExecutor
 
     public function exceptionErrorHandler($errno, $errstr, $errfile, $errline)
     {
-        throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+        if ($errno & error_reporting()) {
+            throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+        }
     }
 
     public function addModule($moduleName)
