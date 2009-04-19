@@ -105,7 +105,7 @@ textarea {
 }
 
 textarea.pageContent {
-  font-family: monaco, 'Lucida Sans Typewriter';
+  font-family: monaco, 'Lucida Sans Typewriter',monospace;
   font-size: 12px;
   height: 100%;
   rows: 40;
@@ -244,6 +244,11 @@ div.virtual-wiki-properties {
   border: solid black 1px;
 }
 
+#progressBar {
+  margin: -2px -2px -2px -5px;
+  padding: 2px 2px 2px 5px;
+}
+
 .actions a:link, .actions a:visited {
   display: block;
   margin: 0px;
@@ -285,7 +290,7 @@ span.page_title {
 }
 
 .page_type {
-  font-size: 1.2px;
+  font-size: 1.2em;
   font-variant: small-caps;
 }
 
@@ -320,7 +325,7 @@ span.page_title {
 }
 
 .code {
-  font-family: courier, 'Lucida Sans Typewriter';
+  font-family: courier, 'Lucida Sans Typewriter',monospace;
   font-size: 16px;
   color: #004000;
   font-weight: bold;
@@ -570,7 +575,7 @@ table.dirListing {
 
 /**********
 
- Used in FIT
+ Used in FIT and the summary bar
 
 **********/
 
