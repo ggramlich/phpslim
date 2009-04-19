@@ -11,8 +11,9 @@ class PhpSlim_ListExecutor
 
     public function execute($instructions)
     {
+        $this->_results = array();
         foreach ($instructions as $instruction) {
-            $this->executeInstruction($instruction);
+            $this->_results[] = $this->executeInstruction($instruction);
             if ($this->lastResultIsStopTestException()) {
                 break;
             }
@@ -37,7 +38,6 @@ class PhpSlim_ListExecutor
 
     private function executeInstruction($instruction)
     {
-        $result = PhpSlim_Statement::execute($instruction, $this->_executor);
-        $this->_results[] = $result;
+        return PhpSlim_Statement::execute($instruction, $this->_executor);
     }
 }
