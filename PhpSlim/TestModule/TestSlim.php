@@ -10,6 +10,8 @@ class TestModule_TestSlim
 
     private $_integerArray;
 
+    private static $_staticValue;
+
     public function echoValue($x)
     {
         return $x;
@@ -80,6 +82,11 @@ class TestModule_TestSlim
         return 1/0;
     }
 
+    public function raiseStopException()
+    {
+        throw new PhpSlim_SlimError_StopTest('test stopped in TestSlim');
+    }
+
     public function expect($method, $args, $return = null)
     {
         $this->_expectedMethod = $method;
@@ -112,5 +119,15 @@ class TestModule_TestSlim
             $this->goodCall = true;
             return $this->_expectedReturn;
         }
+    }
+
+    public static function setStaticValue($value)
+    {
+        self::$_staticValue = $value;
+    }
+
+    public static function getStaticValue()
+    {
+        return self::$_staticValue;
     }
 }

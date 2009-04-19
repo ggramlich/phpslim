@@ -6,12 +6,13 @@ class PhpSlim_Tests_ListExecutorTest extends PhpSlim_Tests_TestCase
 
     public function setup()
     {
+        TestModule_TestSlim::setStaticValue(null);
         $this->_executor = new PhpSlim_ListExecutor();
         $this->_statements = array();
         $this->addStatement('i1', 'import', 'TestModule');
         $this->addStatement('m1', 'make', 'testSlim', 'TestSlim');
     }
-    
+
     private function addStatement()
     {
         $this->_statements[] = func_get_args();
@@ -22,7 +23,7 @@ class PhpSlim_Tests_ListExecutorTest extends PhpSlim_Tests_TestCase
         $map = $this->pairsToMap($resultList);
         return $map[$id];
     }
-    
+
     private function pairsToMap($pairs)
     {
         $map = array();
@@ -191,7 +192,7 @@ class PhpSlim_Tests_ListExecutorTest extends PhpSlim_Tests_TestCase
         $this->addStatement("id", "call", "testSlim", "getNull");
         $this->checkResults(array('id' => null));
     }
-    
+
     public function testSurviveExecutingAnError()
     {
         $this->addStatement("id", "call", "testSlim", "triggerError");
@@ -208,5 +209,42 @@ class PhpSlim_Tests_ListExecutorTest extends PhpSlim_Tests_TestCase
         error_reporting($oldLevel);
         $result = $this->getResult('id', $results);
         $this->assertFalse($result);
+    }
+
+    public function testStopTestExceptionIsReturned()
+    {
+        $this->addStatement("id", "call", "testSlim", "raiseStopException");
+        $results = $this->execute();
+        $result = $this->getResult('id', $results);
+        $this->assertContains('STOP_TEST', $result);
+    }
+
+    public function testSetStaticValueCanBeReadDirectly()
+    {
+        $this->addStatement("id", "call", "testSlim", "setStaticValue", 'xyz');
+        $this->execute();
+        $this->assertEquals('xyz', TestModule_TestSlim::getStaticValue());
+    }
+
+    public function testStaticValueIsNull()
+    {
+        $this->assertNull(TestModule_TestSlim::getStaticValue());
+    }
+
+    public function testStopTestExceptionPreventsFurtherExecution()
+    {
+        $this->addStatement("id1", "call", "testSlim", "raiseStopException");
+        $this->addStatement("id2", "call", "testSlim", "setStaticValue", 'xyz');
+        $results = $this->execute();
+        $this->assertNull(TestModule_TestSlim::getStaticValue());
+    }
+
+    public function testThereIsNoResultAfterStopTestException()
+    {
+        $this->addStatement("id1", "call", "testSlim", "raiseStopException");
+        $this->addStatement("id2", "call", "testSlim", "setStaticValue", 'xyz');
+        $results = $this->execute();
+        $resultKeys = array_keys($this->pairsToMap($results));
+        $this->assertEquals(array('i1', 'm1', 'id1'), $resultKeys);
     }
 }

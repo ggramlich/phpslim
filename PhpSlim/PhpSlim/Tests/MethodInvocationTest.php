@@ -63,6 +63,13 @@ class PhpSlim_Tests_MethodInvocationTest extends PhpSlim_Tests_TestCase
         $this->assertErrorMessage($message, $result);
     }
 
+    public function testCallMethodThatRaisesStopException()
+    {
+        $result = $this->_executor->call('testSlim', 'raiseStopException');
+        $message = 'STOP_TEST test stopped in TestSlim';
+        $this->assertErrorMessage($message, $result);
+    }
+
     public function testCallEchoValueWithArray()
     {
         $result = $this->_executor->call(
