@@ -4,6 +4,7 @@ class PhpSlim_StatementExecutor
     private $_instances = array();
     private $_modules = array();
     private $_symbolRepository;
+    private $_stopRequested = false;
 
     public function __construct()
     {
@@ -21,6 +22,8 @@ class PhpSlim_StatementExecutor
             return 'OK';
         } catch (PhpSlim_SlimError $e) {
             return PhpSlim::tagErrorMessage($e->getMessage());
+        } catch (Exception $e) {
+            return $this->exceptionToString($e);
         }
     }
 
@@ -80,6 +83,8 @@ class PhpSlim_StatementExecutor
             return $result;
         } catch (PhpSlim_SlimError $e) {
             return PhpSlim::tagErrorMessage($e->getMessage());
+        } catch (Exception $e) {
+            return $this->exceptionToString($e);
         }
     }
 
@@ -88,6 +93,25 @@ class PhpSlim_StatementExecutor
         if ($errno & error_reporting()) {
             throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
         }
+    }
+
+    private function exceptionToString(Exception $e)
+    {
+        if ($this->isStopTestException($e)) {
+            $this->_stopRequested = true;
+            $message = $e->getMessage();
+            if (!empty($message)) {
+                $message = PhpSlim::errorMessage($e->getMessage());
+            }
+            return PhpSlim::tagStopTestMessage($message);
+        } else {
+            return PhpSlim::tagErrorMessage($e->__toString());
+        }
+    }
+
+    private function isStopTestException(Exception $e)
+    {
+        return (false !== strpos(get_class($e), 'StopTest'));
     }
 
     public function addModule($moduleName)
@@ -145,4 +169,15 @@ class PhpSlim_StatementExecutor
     {
         return $this->_symbolRepository->replaceSymbols($list);
     }
+
+    public function stopHasBeenRequested()
+    {
+        return $this->_stopRequested;
+    }
+
+    public function reset()
+    {
+        $this->_stopRequested = false;
+    }
+
 }

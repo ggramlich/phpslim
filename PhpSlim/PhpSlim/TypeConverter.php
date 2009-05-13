@@ -37,6 +37,33 @@ class PhpSlim_TypeConverter
         return sprintf('["%s"]', implode('", "', $array));
     }
 
+    public static function parseList($list)
+    {
+        $list = self::removeBrackets($list);
+        if (empty($list)) {
+            return array();
+        }
+        return array_map('trim', explode(',', $list));
+    }
+
+    private static function removeBrackets($list)
+    {
+        self::validateListFormat($list);
+        $list = mb_substr($list, 1);
+        $list = mb_substr($list, 0, -1);
+        return trim($list);
+    }
+
+    private static function validateListFormat($list)
+    {
+        if ('[' != mb_substr($list, 0, 1)) {
+            throw new PhpSlim_SlimError_Message('List did not start with [');
+        }
+        if (']' != mb_substr($list, -1)) {
+            throw new PhpSlim_SlimError_Message('List did not end with ]');
+        }
+    }
+    
     private static function isNumericArray($array)
     {
         if (!is_array($array)) {
@@ -54,11 +81,12 @@ class PhpSlim_TypeConverter
         $int = floor($value);
         $fract = 10.0 * ($value - $int);
         $percent = substr((string) $fract, 2);
+        $fract = (int)((string)$fract);
         $lotsOfSubsequentZeros = strpos($percent, '00000000000');
         if (false !== $lotsOfSubsequentZeros) {
             $percent = substr($percent, 0, $lotsOfSubsequentZeros);
         }
-        return $sign . sprintf('%01d.%01d%s', $int, (int)$fract, $percent);
+        return $sign . sprintf('%01d.%01d%s', $int, $fract, $percent);
     }
 
     public static function boolToString($value)

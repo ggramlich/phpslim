@@ -26,6 +26,7 @@ class PhpSlim_Tests_TypeConverterTest extends PhpSlim_Tests_TestCase
         $this->assertFloatConvertsTo('-1.9', -1.9);
         $this->assertFloatConvertsTo('123.9', 123.9);
         $this->assertFloatConvertsTo('-123.9', -123.9);
+        $this->assertFloatConvertsTo('10.2', 10.2);
     }
 
     public function testZeroAfterDot()

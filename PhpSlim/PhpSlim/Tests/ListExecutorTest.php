@@ -216,7 +216,8 @@ class PhpSlim_Tests_ListExecutorTest extends PhpSlim_Tests_TestCase
         $this->addStatement("id", "call", "testSlim", "raiseStopException");
         $results = $this->execute();
         $result = $this->getResult('id', $results);
-        $this->assertContains('STOP_TEST', $result);
+        $this->assertContains(PhpSlim::EXCEPTION_STOP_TEST_TAG, $result);
+        $this->assertStopTestMessage('test stopped in TestSlim', $result);
     }
 
     public function testSetStaticValueCanBeReadDirectly()
