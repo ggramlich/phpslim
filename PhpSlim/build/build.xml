@@ -5,6 +5,10 @@
     <target name="build" depends="test,makePear">
     </target>
 
+    <target name="clean">
+        <mkdir dir="${log}"/>
+    </target>
+    
     <target name="makePear">
         <mkdir dir="build/PEAR"/>
         <delete includeemptydirs="true">
@@ -27,12 +31,12 @@
     <target name="test" depends="phpunit,phplint,phpcs,stricttests">
     </target>
 
-    <target name="phpcs">
+    <target name="phpcs" depends="clean">
         <exec executable="phpcs" dir="" output="${log}/checkstyle.xml" failonerror="true">
             <arg line="--report=checkstyle --standard=ZEND PhpSlim TestModule Examples"/>
         </exec>
     </target>
-    <target name="phpunit">
+    <target name="phpunit" depends="clean">
         <exec executable="phpunit" dir="" failonerror="true">
             <arg line="--log-xml ${log}/PhpSlim_phpunit.xml
                 PhpSlim_Tests_AllTests PhpSlim/Tests/AllTests.php" />
