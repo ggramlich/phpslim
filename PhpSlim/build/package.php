@@ -4,6 +4,8 @@ require_once('PEAR/PackageFileManager2.php');
 
 PEAR::setErrorHandling(PEAR_ERROR_DIE);
 
+date_default_timezone_set('Europe/Berlin');
+
 // Set common variables
 $package         = 'PhpSlim';
 $summary         = 'Php port of Slim';
