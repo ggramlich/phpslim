@@ -2,11 +2,11 @@ Put these definitions into some base page under which you put your Slim tests.
 
 Make sure that the following lines point to the path of your .PhpSlim installation. The runPhpSlim.php file must be in this directory.
 
-!define TEST_RUNNER {%PHP_SLIM_PATH%/runPhpSlim.php}
+!define TEST_RUNNER {%PHP_SLIM_PATH%/script/runPhpSlim}
 !path %PHP_SLIM_PATH%/Examples
 
 !define TEST_SYSTEM {slim}
-!define COMMAND_PATTERN {php %m %p}
+!define COMMAND_PATTERN {%m %p}
 !define PATH_SEPARATOR {:}
 
 

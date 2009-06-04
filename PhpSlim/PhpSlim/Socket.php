@@ -4,9 +4,12 @@ abstract class PhpSlim_Socket
     protected $_host;
     protected $_port;
     private $_logger;
+    private $_numberOfRetries = 20;
 
     protected $_socketResource;
     protected $_communicationSocket;
+
+    const CHUNK_SIZE = 50;
 
     public function __construct($host, $port)
     {
@@ -32,19 +35,41 @@ abstract class PhpSlim_Socket
 
     public function read($len)
     {
-        // First check, if there is any data available.
         // Without this check socket_read might hang and not even return "".
-        if (!$this->hasReadableData()) {
-            $this->raiseError(
-                "Socket::read() was called, " .
-                "but no readable data was available."
-            );
-        }
-        $len = (int) $len;
-        usleep($len * 20);
-        $input = socket_read($this->_communicationSocket, $len);
+        $this->ensureReadableData();
+        $input = $this->readInChunks($len);
         $this->log("Read: $input");
         return $input;
+    }
+
+    private function readInChunks($len)
+    {
+        $message  = '';
+        while ($len > self::CHUNK_SIZE) {
+            $len -= self::CHUNK_SIZE;
+            $message .= $this->readBytes(self::CHUNK_SIZE);
+        }
+        return $message . $this->readBytes($len);
+    }
+
+    private function readBytes($len)
+    {
+        return socket_read($this->_communicationSocket, $len);
+    }
+
+    private function ensureReadableData()
+    {
+        $i = 0;
+        while (!$this->hasReadableData()) {
+            if ($i > $this->_numberOfRetries) {
+                $this->raiseError(
+                    "Socket::read() was called, " .
+                    "but no readable data was available."
+                );
+            }
+            usleep(10000);
+            $i++;
+        }
     }
 
     public function hasReadableData()

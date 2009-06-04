@@ -6,6 +6,9 @@ class PhpSlim_SymbolRepository
     public function setSymbol($name, $value)
     {
         $this->_symbols[$name] = $value;
+        // Sort it reverse, so for non-prefix-free symbol combinations 
+        // the longest symbol is replaced first
+        krsort($this->_symbols);
     }
 
     public function getSymbol($name)

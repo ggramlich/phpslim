@@ -41,12 +41,21 @@ class PhpSlim_Server
 
     private function readCommand()
     {
-        $length = $this->_socket->read(6);
+        $length = (int) $this->_socket->read(6);
         // Skip colon
         $this->_socket->read(1);
         return $this->readMultibytes($length);
     }
 
+    /**
+     * Workaround to read $length many characters
+     * 
+     * This method is deprecated, since
+     * http://github.com/unclebob/fitnesse/commit/
+     * d20ad095d7e9fc62eb8eca614fd2a81a7f8643e2
+     * 
+     * @deprecated
+     */
     private function readMultibytes($length)
     {
         $string = $this->_socket->read($length);

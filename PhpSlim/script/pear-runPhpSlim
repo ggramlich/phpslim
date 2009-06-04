@@ -1,3 +1,4 @@
+#!@PHP-BIN@
 <?php
 require_once 'PhpSlim.php';
 PhpSlim::main($_SERVER["argv"]);

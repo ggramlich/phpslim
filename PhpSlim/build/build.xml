@@ -2,7 +2,29 @@
 <project name="PhpSlim" default="build" basedir="..">
     <property name="log" location="build/log"/>
 
-    <target name="build" depends="phpunit,phpcs,stricttests">
+    <target name="build" depends="test,makePear">
+    </target>
+
+    <target name="makePear">
+        <mkdir dir="build/PEAR"/>
+        <delete includeemptydirs="true">
+            <fileset dir="build/PEAR" includes="**/*"/>
+        </delete>
+        <exec executable="php" dir="build" failonerror="true">
+            <arg line="package.php make" />
+        </exec>
+        <exec executable="pear" dir="" failonerror="true">
+            <arg line="package package.xml" />
+        </exec>
+        <move todir="build/PEAR">
+            <fileset dir=".">
+                <include name="package.xml"/>
+                <include name="PhpSlim*.tgz"/>
+            </fileset>
+        </move>
+    </target>
+
+    <target name="test" depends="phpunit,phplint,phpcs,stricttests">
     </target>
 
     <target name="phpcs">
@@ -21,6 +43,17 @@
             <arg line="runtests.php" />
         </exec>
     </target>
+
+    <target name="phplint">
+        <apply executable="php" failonerror="true">
+            <arg value="-l" />
+            <fileset dir="">
+                <include name="**/*.php" />
+            </fileset>
+        </apply>
+    </target>
+
+
     <target name="zipAll">
         <zip destfile="${log}/PhpSlimAll.zip"
             basedir="."
