@@ -1,21 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="PhpSlim" default="build" basedir="..">
     <property name="log" location="build/log"/>
+    <property name="gitProject" value="git@github.com:ggramlich/phpslim.git" />
+    <property name="gitBase" value="git@github.com:ggramlich/ggramlich.github.com.git" />
 
     <target name="build" depends="test,makePear">
     </target>
 
-    <target name="clean">
-        <mkdir dir="${log}"/>
+    <target name="syncGit" depends="clean">
+        <delete dir="../git/phpslim" />
+        <mkdir dir="../git"/>
+        <exec executable="git" dir="../git">
+            <arg line="clone ${gitProject}" />
+        </exec>
+        <copy toDir="../git/phpslim/PhpSlim" overwrite="true">
+            <fileset dir="." defaultexcludes="no"/>
+        </copy>
     </target>
-    
-    <target name="makePear">
+
+    <target name="clean">
+        <delete dir="${log}" />
+        <delete dir="build/PEAR" />
+    </target>
+
+    <target name="makePear" depends="setChannelUrl">
+        <delete dir="build/PEAR" />
         <mkdir dir="build/PEAR"/>
-        <delete includeemptydirs="true">
-            <fileset dir="build/PEAR" includes="**/*"/>
-        </delete>
         <exec executable="php" dir="build" failonerror="true">
-            <arg line="package.php make" />
+            <arg line="package.php make ${channelurl}" />
+        </exec>
+        <exec executable="echo" dir="" failonerror="true">
+            <arg line="package ${channelurl}" />
         </exec>
         <exec executable="pear" dir="" failonerror="true">
             <arg line="package package.xml" />
@@ -24,19 +39,57 @@
             <fileset dir=".">
                 <include name="package.xml"/>
                 <include name="PhpSlim*.tgz"/>
+                <include name="version.txt"/>
             </fileset>
         </move>
+    </target>
+
+    <target name="releasePackage" depends="build,gitcloneBase">
+        <property file="build/PEAR/version.txt" />
+        <exec executable="php" dir="../git/ggramlich.github.com">
+            <arg line="../../PhpSlim/build/pearscs.phar release ../../PhpSlim/build/PEAR/PhpSlim-${version}.tgz ggramlich" />
+        </exec>
+    </target>
+
+    <target name="gitcloneBase">
+        <delete dir="../git/ggramlich.github.com"/>
+        <mkdir dir="../git"/>
+        <exec executable="git" dir="../git">
+            <arg line="clone ${gitBase}" />
+        </exec>
+    </target>
+
+    <target name="createChannel" depends="setChannelUrl">
+        <delete dir="build/channel" />
+        <mkdir dir="build/channel" />
+        <exec executable="php" dir="build/channel" failonerror="true">
+            <arg line="../pearscs.phar create ${channelurl} &quot;Gregor Gramlich PHP repository&quot; ggramlich" />
+        </exec>
+    </target>
+
+    <target name="setChannelUrl">
+        <!-- overwrite with -Dlocation=local or -Dlocation=pear -->        
+        <property name="location" value="github" />
+        <condition property="channelurltemp" value="localhost/pear" else="ggramlich.github.com">
+            <equals arg1="${location}" arg2="local" />
+        </condition>
+        <condition property="channelurl" value="pear.php.net" else="${channelurltemp}">
+            <equals arg1="${location}" arg2="pear" />
+        </condition>
+        <echo message="Channel ${channelurl}" />
     </target>
 
     <target name="test" depends="phpunit,phplint,phpcs,stricttests">
     </target>
 
-    <target name="phpcs" depends="clean">
+    <target name="phpcs">
+        <mkdir dir="${log}"/>
         <exec executable="phpcs" dir="" output="${log}/checkstyle.xml" failonerror="true">
             <arg line="--report=checkstyle --standard=ZEND PhpSlim TestModule Examples"/>
         </exec>
     </target>
-    <target name="phpunit" depends="clean">
+    <target name="phpunit">
+        <mkdir dir="${log}"/>
         <exec executable="phpunit" dir="" failonerror="true">
             <arg line="--log-xml ${log}/PhpSlim_phpunit.xml
                 PhpSlim_Tests_AllTests PhpSlim/Tests/AllTests.php" />
@@ -57,8 +110,8 @@
         </apply>
     </target>
 
-
     <target name="zipAll">
+        <mkdir dir="${log}"/>
         <zip destfile="${log}/PhpSlimAll.zip"
             basedir="."
             excludes="build/log/**"
