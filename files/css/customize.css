@@ -39,11 +39,19 @@
         border-bottom:1px dotted #aaa;
     }
 
-    .highlight pre, pre code {
-        background-color:#F8F8FF !important;
-        border:1px solid #DEDEDE !important;
-        color:#444444 !important;
-        overflow:auto !important;
-        padding:0.5em !important;
+    .highlight pre {
+        background-color:#eee;
+        border:1px solid #ccc;
+        overflow:auto;
+        padding:0.5em;
     }
+    
+    pre {
+        background-color:#eee;
+        border:1px solid #ccc;
+        overflow:auto;
+        padding:0.5em;
+    }
+    pre, code { color: #444; }
+    
 }

@@ -5,4 +5,6 @@ pygments: true
 main_pages:
  - {name: Home, page: index.html}
  - {name: Installation, page: installation.html}
+ - name: First Steps
+   page: first_steps.html
 
