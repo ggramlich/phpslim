@@ -12,8 +12,6 @@
 {% if page.feed %}
 <link rel="alternate" type="application/atom+xml" href="{{ page.feed }}" title="RSS feed" />
 {% endif %}
-<!-- syntax highlighting CSS -->
-<link rel="stylesheet" href="/files/css/syntax.css" type="text/css" />
 <link href="files/css/my_layout.css" rel="stylesheet" type="text/css" />
 <!--[if lte IE 7]>
 <link href="files/css/patches/patch_my_layout.css" rel="stylesheet" type="text/css" />
@@ -58,6 +56,12 @@
         <div id="col3">
           <div id="col3_content" class="clearfix">
             <!-- add your content here -->
+              <h6 class="vlist">Pages</h6>
+              <ul class="vlist">
+              {% for page in site.main_pages %}
+                <li><a href="{{ page.page }}">{{ page.name }}</a></li>
+              {% endfor %}
+              </ul>
           </div>
           <!-- IE Column Clearing -->
           <div id="ie_clearing"> &#160; </div>

@@ -15,6 +15,7 @@
 
 /* import screen layout | Screen-Layout einbinden */
 @import url(../yaml/navigation/nav_slidingdoor.css);
+@import url(../yaml/navigation/nav_vlist.css);
 @import url(screen/basemod.css);
 @import url(screen/content.css);
 @import url(customize.css);
