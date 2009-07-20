@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>{{ page.title }}</title>
+<meta name="author" content="Gregor Gramlich" />
+<link rel="start" href="/" />
+{% if page.keywords %}
+<meta name="keywords" content="{{ page.keywords }}">
+{% endif %}
+{% if page.feed %}
+<link rel="alternate" type="application/atom+xml" href="{{ page.feed }}" title="RSS feed" />
+{% endif %}
+<!-- syntax highlighting CSS -->
+<link rel="stylesheet" href="/files/css/syntax.css" type="text/css" />
+<link href="files/css/my_layout.css" rel="stylesheet" type="text/css" />
+<!--[if lte IE 7]>
+<link href="files/css/patches/patch_my_layout.css" rel="stylesheet" type="text/css" />
+<![endif]-->
+</head>
+<body id={{ page.section }}>
+  <div class="page_margins">
+    <div class="page">
+      <div id="header">
+        <div id="topnav">
+          <!-- start: skip link navigation -->
+          <a class="skip" title="skip link" href="#navigation">Skip to the navigation</a><span class="hideme">.</span>
+          <a class="skip" title="skip link" href="#content">Skip to the content</a><span class="hideme">.</span>
+          <!-- end: skip link navigation -->
+          <!-- <a href="#">Login</a> | <a href="#">Contact</a> | <a href="#">Imprint</a> -->
+        </div>
+        <h1><a href="index.html">PhpSlim</a></h1>
+      </div>
+      <div id="nav">
+        <!-- skiplink anchor: navigation -->
+        <a id="navigation" name="navigation"></a>
+        <div class="hlist">
+          <!-- main navigation: horizontal list -->
+<!--
+          <ul>
+            <li class="active"><strong>Button 1</strong></li>
+            <li><a href="#">Button 2</a></li>
+            <li><a href="#">Button 3</a></li>
+            <li><a href="#">Button 4</a></li>
+            <li><a href="#">Button 5</a></li>
+          </ul>
+-->
+        </div>
+      </div>
+      <div id="main">
+        <div id="inline_header"><h1>{{ page.heading }}</h1></div>
+        <div id="col1">
+          <div id="col1_content" class="clearfix">
+  {{ content }}
+          </div>
+        </div>
+        <div id="col3">
+          <div id="col3_content" class="clearfix">
+            <!-- add your content here -->
+          </div>
+          <!-- IE Column Clearing -->
+          <div id="ie_clearing"> &#160; </div>
+        </div>
+      </div>
+      <!-- begin: #footer -->
+      <div id="footer">
+        <div class="subcolumns">
+          <div class="c50l">
+            <div class="subcl">
+              <p>
+                  <span>
+                      Layout based on <a href="http://www.yaml.de/">YAML</a>
+                  </span>
+                  <span class="engine">
+                      Powered by <a href="http://github.com/mojombo/jekyll/"
+                            title="A static, minimalist CMS">Jekyll</a>
+                  </span>
+              </p>
+            </div>
+          </div>
+          <div class="c50r">
+            <div class="subcr">
+                <address>
+                    Gregor Gramlich
+                </address>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
