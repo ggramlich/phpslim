@@ -13,6 +13,8 @@
 @import url(../../yaml/core/iehacks.css);
 
 /* Layout-dependent adjustments | Layout-abhängige Anpassungen */
+@import url(../../yaml/patches/patch_nav_vlist.css);
+
 @media screen, projection
 {
  /**
