@@ -8,13 +8,14 @@ Requirements
 ------------
 
 The supported way to install to install PhpSlim, uses the
-[PEAR](http://pear.php.net) installer. The installation process will tell you,
-if there are any missing PHP extensions.
+[PEAR](http://pear.php.net) installer. The installer will tell you,
+if you are missing any PHP extensions. PhpSlim does not depend on the
+PEAR package.
 
 You do **not** need a webserver like Apache.
 
 - PHP version &ge; 5.1.2, CLI access
-- PEAR (only recommended for installation)
+- PEAR (only needed for installation)
 - Java &ge; 5 for FitNesse
 
 Install PhpSlim
@@ -34,37 +35,20 @@ pear install ggramlich/PhpSlim
 
 That's it. Change back to the normal user.
 
-Install FitNesse
+Prepare FitNesse
 ----------------
 
 Now you need a [FitNesse](http://fitnesse.org) installation
-to make use PhpSlim. Go to the
-[download page](http://fitnesse.org/FrontPage.FitNesseDevelopment.DownLoad)
-and download the latest `fitnesse.jar` file.
+to make use of PhpSlim. Go to the
+[download page](http://fitnesse.org/FrontPage.FitNesseDevelopment.DownLoad),
+click on the **EDGE: Latest Hudson build** link
+and download the `fitnesse.jar` file from the Hudson page.
 
-> The  20090709 release has some problems and it is the first with a new
-> self-installing concept, so there are some issues and not all the information
-> in the [FitNesse User Guide](http://fitnesse.org/FitNesse.UserGuide)
-> is up to date.
+The **edge** version of FitNesse is packaged with all its dependencies,
+so that there is no need to install or unpack anything.
 
-Put the jar file into some directory where you want to keep 
-the fitnesse installation. Change to this directory on the console and type
-
-{% highlight bash %}
-java -jar fitnesse.jar
-{% endhighlight %}
-
-The first time you do this, FitNesse unpacks its files. You see the output.
-
-    Unpacking new version of FitNesse resources.  Please be patient.
-    ..................................................................
-    ...
-    ..................................................................
-    You must now reload FitNesse.  Thank you for your patience........
-
-
-When this is done,
-you can start FitNesse and set up your first project.
+Put the `fitnesse.jar` file into some directory where you want to keep 
+the FitNesse program.
 
 Continue with [First Steps](first_steps.html).
 
