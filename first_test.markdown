@@ -7,7 +7,9 @@ section: first_steps
 The first wiki page
 -------------------
 
-Start your first wiki page by browsing to a non-existing page
+After having started the FitNesse server in the 
+[First Steps](first_steps.html),
+create your first wiki page by browsing to a non-existing page
 <http://localhost:8070/MyFirstSlimTest>.
 
 Overwrite the `!contents -R2 -g -p -f -h` with

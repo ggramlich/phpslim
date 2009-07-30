@@ -53,5 +53,10 @@
         padding:0.5em;
     }
     pre, code { color: #444; }
-    
+
+    .vlist li a:focus, .vlist li a:hover, 
+    .vlist li a:active {
+        background-color:#bbb;
+        color:#fff;
+    }    
 }
