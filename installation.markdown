@@ -21,8 +21,8 @@ You do **not** need a webserver like Apache.
 Install PhpSlim
 ------------
 
-The installation on Linux and Windows system is basically the same.
-On Windows you can ignore the user changes.
+The installation on Linux and Windows systems is basically the same.
+On Windows you do not need to change the user.
 
 As `root` user type the following on the console.
 
@@ -47,8 +47,8 @@ and download the `fitnesse.jar` file from the Hudson page.
 The **edge** version of FitNesse is packaged with all its dependencies,
 so that there is no need to install or unpack anything.
 
-Put the `fitnesse.jar` file into some directory where you want to keep 
-the FitNesse program.
+Put the `fitnesse.jar` file into some directory from where you want to 
+start the FitNesse system.
 
 Continue with [First Steps](first_steps.html).
 
