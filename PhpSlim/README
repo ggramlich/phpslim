@@ -3,6 +3,13 @@ PhpSlim is the PHP port of Robert C. Martin's Slim
 
 It is written and maintained by Gregor Gramlich.
 
+The information in this file is outdated.
+
+Please visit the project home page at
+http://ggramlich.github.com/phpslim
+
+
+-----------------------------------------------------
 You need a copy of FitNesse to run the FitNesse wiki.
 Download the latest release (use the zip file) from
 http://fitnesse.org/FitNesseDevelopment.DownLoad

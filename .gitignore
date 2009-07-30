@@ -1,2 +1,6 @@
 # Ignore svn directories
 .svn
+.buildpath
+.project
+.settings
+
