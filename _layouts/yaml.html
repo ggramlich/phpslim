@@ -58,8 +58,16 @@
             <!-- add your content here -->
               <h6 class="vlist">Pages</h6>
               <ul class="vlist">
-              {% for page in site.main_pages %}
-                <li><a href="{{ page.page }}">{{ page.name }}</a></li>
+              {% for the_page in site.main_pages %}
+                <li><a href="{{ the_page.page }}">{{ the_page.name }}</a>
+                {% if the_page.sub_pages and the_page.section == page.section %}
+                  <ul class="vlist">
+                  {% for subpage in the_page.sub_pages %}
+                    <li><a href="{{ subpage.page }}">{{ subpage.name }}</a>
+                  {% endfor %}
+                  </ul>
+                {% endif %}
+                </li>
               {% endfor %}
               </ul>
           </div>

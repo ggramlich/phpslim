@@ -3,10 +3,16 @@ auto:     true
 pygments: true
 
 main_pages:
- - {name: Home, page: index.html}
- - {name: Installation, page: installation.html}
- - name: First Steps
-   page: first_steps.html
- - name: First Test
-   page: first_test.html
+ - name: Home
+   page: index.html
+ - name: Tutorials
+   page: tutorials.html
+   section: tutorials
+   sub_pages: 
+     - name: Installation
+       page: installation.html
+     - name: First Steps
+       page: first_steps.html
+     - name: First Test
+       page: first_test.html
 

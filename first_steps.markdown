@@ -2,7 +2,7 @@
 layout: yaml
 title: First Steps
 heading: Prepare FitNesse for the use with PhpSlim
-section: first_steps
+section: tutorials
 brace: "{"
 ---
 Create a project directory

@@ -2,7 +2,7 @@
 layout: yaml
 title: Installation
 heading: Installation of PhpSlim
-section: installation
+section: tutorials
 ---
 Requirements
 ------------

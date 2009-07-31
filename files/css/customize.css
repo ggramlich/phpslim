@@ -55,7 +55,11 @@
     pre, code { color: #444; }
 
     .vlist li a:focus, .vlist li a:hover, 
-    .vlist li a:active {
+    .vlist li a:active,
+    .vlist li ul li a:focus,
+    .vlist li ul li a:hover,
+    .vlist li ul li a:active 
+    {
         background-color:#bbb;
         color:#fff;
     }    

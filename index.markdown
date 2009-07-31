@@ -13,6 +13,5 @@ It is written and maintained by Gregor Gramlich.
 You will find tutorials and links to external
 references on this site.
 
-Take the tour through [Installation](installation.html), 
-[First Steps](first_steps.html) and the [First Test](first_test.html).
+Please take a look at the [Tutorials](tutorials.html).
 

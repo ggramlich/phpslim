@@ -2,7 +2,7 @@
 layout: yaml
 title: First Test
 heading: Write a first test with FitNesse and PhpSlim
-section: first_steps
+section: tutorials
 ---
 The first wiki page
 -------------------
