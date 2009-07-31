@@ -63,7 +63,7 @@
                 {% if the_page.sub_pages and the_page.section == page.section %}
                   <ul class="vlist">
                   {% for subpage in the_page.sub_pages %}
-                    <li><a href="{{ subpage.page }}">{{ subpage.name }}</a>
+                    <li><a href="{{ subpage.page }}">{{ subpage.name }}</a></li>
                   {% endfor %}
                   </ul>
                 {% endif %}
