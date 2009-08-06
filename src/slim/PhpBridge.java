@@ -1,7 +1,5 @@
 package slim;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -10,9 +8,6 @@ import java.lang.reflect.Proxy;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-
-import org.junit.Test;
 
 public class PhpBridge {
   private ScriptEngine engine;

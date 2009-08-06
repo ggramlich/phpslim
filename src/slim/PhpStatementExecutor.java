@@ -4,7 +4,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Proxy;
 
-import fitnesse.slim.SlimError;
 import fitnesse.slim.SlimServer;
 import fitnesse.slim.StatementExecutorInterface;
 
@@ -74,7 +73,7 @@ public class PhpStatementExecutor implements StatementExecutorInterface {
   }
 
   private Object callMethod(String method, Object... args) throws Exception {
-    return bridge.invokeMethod(phpStatementExecutorProxy, method, args);
+    return bridge.invokeMethod(getStatementExecutor(), method, args);
   }
 
   private String exceptionToString(Throwable exception) {

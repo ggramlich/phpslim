@@ -3,7 +3,6 @@ package slim;
 import static org.junit.Assert.*;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.lang.reflect.Proxy;
 
 import javax.script.Invocable;

@@ -6,17 +6,13 @@ import static org.junit.Assert.*;
 
 import static util.ListUtility.list;
 
-import java.lang.reflect.Proxy;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 
 import slim.testModule.TestSlimProxy;
 
 import fitnesse.slim.SlimServer;
 import fitnesse.slim.StatementExecutorInterface;
 import fitnesse.slim.converters.BooleanConverter;
-import fitnesse.slim.converters.VoidConverter;
 
 public class PhpSlimMethodInvocationTest {
   private StatementExecutorInterface caller;

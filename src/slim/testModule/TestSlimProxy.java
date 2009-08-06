@@ -1,10 +1,6 @@
 package slim.testModule;
 
-import java.lang.reflect.Proxy;
-
 import fitnesse.slim.StatementExecutorInterface;
-
-import slim.PhpBridge;
 
 public class TestSlimProxy {
   private String testSlim;
