@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/fitnesse"/>
+	<classpathentry kind="lib" path="lib/JavaBridge.jar"/>
+	<classpathentry kind="lib" path="lib/php-script.jar"/>
+	<classpathentry kind="lib" path="lib/php-servlet.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.6.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
