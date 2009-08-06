@@ -11,10 +11,10 @@ public class PhpStatementExecutor implements StatementExecutorInterface {
 
   private boolean stopRequested = false;
 
-  private PhpBridge bridge;
+  private Bridge bridge;
   private Proxy phpStatementExecutorProxy;
   
-  public PhpStatementExecutor(PhpBridge bridge) throws Exception
+  public PhpStatementExecutor(Bridge bridge) throws Exception
   {
     this.bridge = bridge;
     phpStatementExecutorProxy = bridge.getStatementExecutor();

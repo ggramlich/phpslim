@@ -7,6 +7,7 @@ import static org.junit.Assert.*;
 import java.lang.reflect.Proxy;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fitnesse.slim.SlimServer;
@@ -15,9 +16,17 @@ import fitnesse.slim.StatementExecutorInterface;
 public class PhpSlimInstanceCreationTest {
   private StatementExecutorInterface caller;
 
+  private static SlimFactory slimFactory;
+  
+  @BeforeClass
+  public static void setUpClass() {
+    // Creates Bridge only once
+    slimFactory = new PhpSlimFactory();
+  }
+  
   @Before
   public void setUp() throws Exception {
-    caller = new PhpStatementExecutor(new PhpBridge());
+    caller = slimFactory.getStatementExecutor();
   }
 
   @Test

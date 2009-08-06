@@ -10,10 +10,11 @@ import javax.script.Invocable;
 import org.junit.*;
 
 public class PhpBridgeTest {
-  private PhpBridge bridge;
+  private static PhpBridge bridge;
   
-  @Before
-  public void setup() {
+  @BeforeClass
+  public static void setUpClass() {
+    // Creates Bridge only once
     bridge = new PhpBridge();
   }
   

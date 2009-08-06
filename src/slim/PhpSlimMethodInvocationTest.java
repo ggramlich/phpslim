@@ -19,9 +19,17 @@ public class PhpSlimMethodInvocationTest {
   private static final String TEST_SLIM = "testSlim";
   private TestSlimProxy testSlim;
 
+  private static SlimFactory slimFactory;
+  
+  @BeforeClass
+  public static void setUpClass() {
+    // Creates Bridge only once
+    slimFactory = new PhpSlimFactory();
+  }
+  
   @Before
   public void setUp() throws Exception {
-    caller = new PhpStatementExecutor(new PhpBridge());
+    caller = slimFactory.getStatementExecutor();
     caller.create(TEST_SLIM, "TestModule_TestSlim", new Object[0]);
     testSlim = new TestSlimProxy(TEST_SLIM, caller);
   }

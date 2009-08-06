@@ -9,7 +9,7 @@ import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
-public class PhpBridge {
+public class PhpBridge implements Bridge {
   private ScriptEngine engine;
   private Proxy phpProxy;
   
