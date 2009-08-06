@@ -14,8 +14,8 @@ class PhpSlim_TypeConverter
                 return $object->__toString();
             }
         }
-        if (self::isNumericArray($object)) {
-            return self::inspectArray($object);
+        if (self::isNumericArray($object) || self::isBoolArray($object)) {
+            return self::inspectArrayNoQuotes($object);
         }
         if (is_bool($object)) {
             return self::boolToString($object);
@@ -26,15 +26,39 @@ class PhpSlim_TypeConverter
         if (is_scalar($object)) {
             return (string) $object;
         }
+        if (is_array($object)) {
+            return self::inspectArray($object);
+        }
         return print_r($object, true);
     }
 
-    public static function inspectArray($array)
+    public static function inspectArray($array, $quotes = true)
     {
         if (empty($array)) {
             return '[]';
         }
-        return sprintf('["%s"]', implode('", "', $array));
+        $array = array_map(array('self', 'toString'), $array);
+        if ($quotes) {
+            $format = '["%s"]';
+            $glue = '", "';
+        } else {
+            $format = '[%s]';
+            $glue = ', ';
+        }
+        return sprintf($format, implode($glue, $array));
+    }
+    
+    public static function inspectArrayNoQuotes($array)
+    {
+        return self::inspectArray($array, false);
+    }
+
+    public static function listToArray($list)
+    {
+        if (is_array($list)) {
+            return $list;
+        }
+        return self::parseList($list);
     }
 
     public static function parseList($list)
@@ -69,9 +93,25 @@ class PhpSlim_TypeConverter
         if (!is_array($array)) {
             return false;
         }
-        $lowerKeyArray = array_change_key_case($array, CASE_LOWER);
-        $upperKeyArray = array_change_key_case($array, CASE_UPPER);
-        return $lowerKeyArray == $upperKeyArray;
+        foreach ($array as $value) {
+            if (!is_numeric($value)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    private static function isBoolArray($array)
+    {
+        if (!is_array($array)) {
+            return false;
+        }
+        foreach ($array as $value) {
+            if (!is_bool($value)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static function floatToString($value)

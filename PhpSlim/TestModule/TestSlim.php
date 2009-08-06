@@ -2,13 +2,24 @@
 class TestModule_TestSlim
 {
     public $goodCall = false;
+
+    public $niladWasCalled = false;
+
     public $value;
+    public $list;
+    public $stringArray;
+    public $doubleArray;
+
+    public $intArg;
+    public $doubleArg;
+    public $charArg;
 
     private $_expectedMethod;
     private $_expectedArgs;
     private $_expectedReturn;
 
     private $_integerArray;
+    private $_booleanArray;
 
     private static $_staticValue;
 
@@ -20,6 +31,11 @@ class TestModule_TestSlim
     public function returnString()
     {
         return 'string';
+    }
+
+    public function returnInt()
+    {
+        return 7;
     }
 
     public function add($a, $b)
@@ -40,17 +56,32 @@ class TestModule_TestSlim
         return $this->_integerArray;
     }
 
+    public function getIntegerArrayAsString()
+    {
+        return PhpSlim_TypeConverter::toString($this->_integerArray);
+    }
+
+    public function setBooleanArray($array)
+    {
+        $array = PhpSlim_TypeConverter::listToArray($array);
+        $callback = array('PhpSlim_TypeConverter', toBool);
+        $this->_booleanArray = array_map($callback, $array);
+    }
+
+    public function getBooleanArray()
+    {
+        return PhpSlim_TypeConverter::toString($this->_booleanArray);
+    }
+
     private static function convertListToIntegerArray($list)
     {
-        if ('[' == substr($list, 0, 1)) {
-            $list = substr($list, 1);
+        $array = PhpSlim_TypeConverter::listToArray($list);
+        try {
+            $result = array_map(array('self', 'castToInt'), $array);
+        } catch (Exception $e) {
+            throw new Exception('message:<<CANT_CONVERT_TO_INTEGER_LIST>>');
         }
-        if (']' == substr($list, -1)) {
-            $list = substr($list, 0, -1);
-        }
-        $array = explode(',', $list);
-        array_walk($array, 'trim');
-        return array_map(array('self', 'castToInt'), $array);
+        return $result;
     }
 
     public static function castToInt($x)
@@ -67,14 +98,116 @@ class TestModule_TestSlim
         return null;
     }
 
+    public function nullString()
+    {
+        return null;
+    }
+
     public function echoInt($i)
     {
-        return $i;
+        return (int) $i;
     }
 
     public function echoString($s)
     {
         return $s;
+    }
+    
+    public function echoBoolean($bool)
+    {
+        return PhpSlim_TypeConverter::toBool($bool);
+    }
+
+    public function oneString($string)
+    {
+        $this->value = (string) $string;
+    }
+
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    public function oneInt($integer)
+    {
+        $this->value = (int) $integer;
+    }
+
+    public function oneDouble($double)
+    {
+        $this->value = (float) $double;
+    }
+    
+    public function oneDate($date)
+    {
+        $this->oneString($date);
+    }
+    
+    public function oneList($list)
+    {
+        $this->list = PhpSlim_TypeConverter::listToArray($list);
+    }
+
+    public function getListArg()
+    {
+        return $this->list;
+    }
+
+    public function setStringArray($array)
+    {
+        $this->stringArray = PhpSlim_TypeConverter::listToArray($array);
+    }
+
+    public function getStringArray()
+    {
+        return PhpSlim_TypeConverter::toString($this->stringArray);
+    }
+
+    public function setDoubleArray($array)
+    {
+        $array = PhpSlim_TypeConverter::listToArray($array);
+        try {
+            $result = array_map(array('self', 'castToFloat'), $array);
+        } catch (Exception $e) {
+            throw new Exception('message:<<CANT_CONVERT_TO_DOUBLE_LIST>>');
+        }
+        $this->doubleArray = $result;
+    }
+
+    public static function castToFloat($value)
+    {
+        if (!is_numeric($value)) {
+            $message = 'message:<<NO_CONVERTER_FOR_ARGUMENT_NUMBER double.>>';
+            throw new Exception($message);
+        }
+        return (float) $value;
+    }
+
+    public function getDoubleArray()
+    {
+        return PhpSlim_TypeConverter::toString($this->doubleArray);
+    }
+
+    public function manyArgs($int, $double, $char)
+    {
+        $this->intArg = (int) $int;
+        $this->doubleArg = (float) $double;
+        $this->charArg = $char;
+    }
+
+    public function getIntegerObjectArg()
+    {
+        return $this->intArg;
+    }
+
+    public function getDoubleObjectArg()
+    {
+        return $this->doubleArg;
+    }
+
+    public function getCharArg()
+    {
+        return $this->charArg;
     }
 
     public function triggerError()
@@ -129,5 +262,15 @@ class TestModule_TestSlim
     public static function getStaticValue()
     {
         return self::$_staticValue;
+    }
+
+    public function nilad()
+    {
+        $this->niladWasCalled = true;
+    }
+    
+    public function niladWasCalled()
+    {
+        return $this->niladWasCalled;
     }
 }

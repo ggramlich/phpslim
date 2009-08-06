@@ -41,6 +41,8 @@ class PhpSlim_StatementExecutor
             }
             if (count($constructorArguments) <
                     $reflectionConstructor->getNumberOfRequiredParameters()
+                    || count($constructorArguments) >
+                    $reflectionConstructor->getNumberOfParameters()
                 ) {
                 throw new Exception;
             }
