@@ -3,4 +3,5 @@
 .buildpath
 .project
 .settings
-
+VMBridge.log
+bin
