@@ -40,6 +40,11 @@ class TestModule_TestSlim
         return $x;
     }
 
+    public function echoList($list)
+    {
+        return $list;
+    }
+
     public function returnString()
     {
         return 'string';
@@ -113,6 +118,10 @@ class TestModule_TestSlim
     public function getNull()
     {
         return null;
+    }
+
+    public function voidFunction()
+    {
     }
 
     public function nullString()
