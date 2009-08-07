@@ -59,7 +59,7 @@ class PhpSlim_Tests_MethodInvocationTest extends PhpSlim_Tests_TestCase
     public function testCantCallAMethodOnAnInstanceThatDoesNotExist()
     {
         $result = $this->_executor->call('noSuchInstance', 'noSuchMethod');
-        $message = 'NO_INSTANCE noSuchInstance';
+        $message = 'NO_INSTANCE noSuchInstance.';
         $this->assertErrorMessage($message, $result);
     }
 

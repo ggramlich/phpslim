@@ -23,6 +23,18 @@ class TestModule_TestSlim
 
     private static $_staticValue;
 
+    private $_constructorArg;
+
+    public function __construct($constructorArg = 0)
+    {
+        $this->_constructorArg = $constructorArg;
+    }
+
+    public function returnConstructorArg()
+    {
+        return $this->_constructorArg;
+    }
+
     public function echoValue($x)
     {
         return $x;
@@ -41,6 +53,11 @@ class TestModule_TestSlim
     public function add($a, $b)
     {
         return $a . $b;
+    }
+
+    public function addTo($a, $b)
+    {
+        return $a + $b;
     }
 
     public function setIntegerArray($array)
@@ -110,7 +127,7 @@ class TestModule_TestSlim
 
     public function echoString($s)
     {
-        return $s;
+        return PhpSlim_TypeConverter::toString($s);
     }
     
     public function echoBoolean($bool)

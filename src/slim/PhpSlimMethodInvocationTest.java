@@ -169,4 +169,17 @@ public class PhpSlimMethodInvocationTest {
     Object result = caller.call(TEST_SLIM, "nullString");
     assertNull(result);
   }
+
+  @Test
+  public void handleEchoNull() throws Exception {
+    Object result = caller.call(TEST_SLIM, "echoString", new Object[]{null});
+    assertEquals("null", result);
+  }
+  
+  @Test
+  public void handleNullSymbols() throws Exception {
+    caller.setVariable("x", null);
+    Object result = caller.call(TEST_SLIM, "echoString", new Object[]{"$x"});
+    assertEquals("null", result);
+  }
 }

@@ -59,7 +59,7 @@ class PhpSlim_StatementExecutor
     public function instance($instanceName)
     {
         if (empty($this->_instances[$instanceName])) {
-            $message = "NO_INSTANCE $instanceName";
+            $message = "NO_INSTANCE $instanceName.";
             throw new PhpSlim_SlimError_Message($message);
         }
         return $this->_instances[$instanceName];
@@ -119,6 +119,7 @@ class PhpSlim_StatementExecutor
     public function addModule($moduleName)
     {
         $this->_modules[] = str_replace('.', '_', $moduleName);
+        return 'OK';
     }
 
     private function getClassObject($className)

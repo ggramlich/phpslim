@@ -8,14 +8,19 @@ class PhpSlim_Java_StatementExecutor
         $this->_executor = $executor;
     }
 
-    public function setSymbol($name, $value)
+    public function setSymbol($name, $valueArray)
     {
-        $this->_executor->setSymbol(java_values($name), java_values($value));
+        // Unpacking the value from a single element array,
+        // see Java PhpStatementExecutor
+        $valueArray = java_cast($valueArray, 'array');
+        $value = java_values(reset($valueArray));
+        $this->_executor->setSymbol(java_cast($name, 'string'), $value);
     }
 
     public function getSymbol($name)
     {
-        return $this->_executor->getSymbol(java_values($name));
+        $value = $this->_executor->getSymbol(java_cast($name, 'string'));
+        return $this->toJavaValue($value);
     }
 
     public function create($instanceName, $className,
@@ -33,10 +38,11 @@ class PhpSlim_Java_StatementExecutor
     public function call($instanceName, $methodName, $args)
     {
         $args = java_cast($args, 'array');
+        $args = $this->castArrayContents($args);
         $result = $this->_executor->call(
             java_cast($instanceName, 'string'),
             java_cast($methodName, 'string'),
-            $this->castArrayContents($args)
+            $args
         );
         return $this->toJavaValue($result);
     }
@@ -46,6 +52,13 @@ class PhpSlim_Java_StatementExecutor
         $instanceName = java_cast($instanceName, 'string');
         $instance = $this->_executor->instance($instanceName);
         return $this->toJavaValue($instance);
+    }
+
+    public function addModule($moduleName)
+    {
+        $moduleName = java_cast($moduleName, 'string');
+        $result = $this->_executor->addModule($moduleName);
+        return $this->toJavaValue($result);
     }
 
     private function castArrayContents(array $args)

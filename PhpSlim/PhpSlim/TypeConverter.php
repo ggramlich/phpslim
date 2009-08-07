@@ -29,6 +29,9 @@ class PhpSlim_TypeConverter
         if (is_array($object)) {
             return self::inspectArray($object);
         }
+        if (is_null($object)) {
+            return 'null';
+        }
         return print_r($object, true);
     }
 

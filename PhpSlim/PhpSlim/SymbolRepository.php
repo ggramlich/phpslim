@@ -38,6 +38,9 @@ class PhpSlim_SymbolRepository
 
     private function replaceSymbolsInItem($item)
     {
+        if (empty($item) || is_object($item)) {
+            return $item;
+        }
         if ($this->itemIsSymbol($item)) {
             // Single symbol, don't replace within string, can return object
             return $this->getSymbol(mb_substr($item, 1));

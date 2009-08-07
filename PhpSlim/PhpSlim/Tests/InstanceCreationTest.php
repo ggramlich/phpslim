@@ -40,9 +40,9 @@ class PhpSlim_Tests_InstanceCreationTest extends PhpSlim_Tests_TestCase
     public function testCantCreateInstanceWithTheWrongNumberOfArguments()
     {
         $result = $this->_caller->create(
-            'x', 'TestModule_TestSlim', array('noSuchArgument')
+            'x', 'TestModule_TestSlim', array('optionalArg', 'noSuchArgument')
         );
-        $message = 'COULD_NOT_INVOKE_CONSTRUCTOR TestModule_TestSlim[1]';
+        $message = 'COULD_NOT_INVOKE_CONSTRUCTOR TestModule_TestSlim[2]';
         $this->assertErrorMessage($message, $result);
     }
 

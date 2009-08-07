@@ -79,7 +79,7 @@ class PhpSlim_Tests_ListExecutorTest extends PhpSlim_Tests_TestCase
         $this->addStatement('id', 'call', 'noSuchInstance', 'noSuchMethod');
         $results = $this->execute();
         $result = $this->getResult('id', $results);
-        $message = 'NO_INSTANCE noSuchInstance';
+        $message = 'NO_INSTANCE noSuchInstance.';
         $this->assertErrorMessage($message, $result);
     }
 

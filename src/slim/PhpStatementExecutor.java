@@ -20,48 +20,36 @@ public class PhpStatementExecutor implements StatementExecutorInterface {
     phpStatementExecutorProxy = bridge.getStatementExecutor();
   }
   
-  private Proxy getStatementExecutor()
+  private Proxy getStatementExecutorProxy()
   {
     return phpStatementExecutorProxy;
   }
   
   @Override
   public Object addPath(String path) {
-    // TODO Auto-generated method stub
-    return null;
+    return callMethod("addModule", new Object[] {path});
   }
 
   @Override
   public Object call(String instanceName, String methodName, Object... args) {
-    try {
-      return callMethod("call", new Object[] {instanceName, methodName, args});
-    } catch (Throwable e) {
-      return exceptionToString(e);
-    }
+    return callMethod("call", new Object[] {instanceName, methodName, args});
   }
 
   @Override
   public Object create(String instanceName, String className, Object[] args) {
-    try {
-      return callMethod("create", new Object[] {instanceName, className, args});
-    } catch (Throwable e) {
-      return exceptionToString(e);
-    }
+    return callMethod("create", new Object[] {instanceName, className, args});
   }
 
   @Override
   public Object getInstance(String instanceName) {
-    try {
-      return callMethod("instance", new Object[] {instanceName});
-    } catch (Throwable e) {
-      return exceptionToString(e);
-    }
+    return callMethod("instance", new Object[] {instanceName});
   }
 
   @Override
   public void setVariable(String name, Object value) {
-    // TODO Auto-generated method stub
-    
+    // Packing the value into a single element array, because a null value
+    // caused the proxy call to hang.
+    callMethod("setSymbol", new Object[] {name, new Object[] {value}});
   }
 
   public boolean stopHasBeenRequested() {
@@ -72,8 +60,12 @@ public class PhpStatementExecutor implements StatementExecutorInterface {
     stopRequested = false;
   }
 
-  private Object callMethod(String method, Object... args) throws Exception {
-    return bridge.invokeMethod(getStatementExecutor(), method, args);
+  private Object callMethod(String method, Object... args) {
+    try {
+      return bridge.invokeMethod(getStatementExecutorProxy(), method, args);
+    } catch (Throwable e) {
+      return exceptionToString(e);
+    }
   }
 
   private String exceptionToString(Throwable exception) {
