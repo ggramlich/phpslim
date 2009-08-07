@@ -241,6 +241,16 @@ class TestModule_TestSlim
         return 1/0;
     }
 
+    public function throwNormal()
+    {
+        throw new Exception('normal exception');
+    }
+
+    public function throwStopping()
+    {
+        $this->raiseStopException();
+    }
+
     public function raiseStopException()
     {
         throw new PhpSlim_SlimError_StopTest('test stopped in TestSlim');

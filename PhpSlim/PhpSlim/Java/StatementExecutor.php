@@ -61,6 +61,16 @@ class PhpSlim_Java_StatementExecutor
         return $this->toJavaValue($result);
     }
 
+    public function stopHasBeenRequested()
+    {
+        return $this->_executor->stopHasBeenRequested();
+    }
+
+    public function reset()
+    {
+        $this->_executor->reset();
+    }
+
     private function castArrayContents(array $args)
     {
         $casted = array();

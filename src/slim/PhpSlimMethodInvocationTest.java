@@ -10,6 +10,7 @@ import org.junit.*;
 
 import slim.testModule.TestSlimProxy;
 
+import fitnesse.slim.SlimFactory;
 import fitnesse.slim.SlimServer;
 import fitnesse.slim.StatementExecutorInterface;
 import fitnesse.slim.converters.BooleanConverter;

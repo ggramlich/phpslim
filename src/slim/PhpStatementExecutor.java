@@ -8,9 +8,6 @@ import fitnesse.slim.SlimServer;
 import fitnesse.slim.StatementExecutorInterface;
 
 public class PhpStatementExecutor implements StatementExecutorInterface {
-
-  private boolean stopRequested = false;
-
   private Bridge bridge;
   private Proxy phpStatementExecutorProxy;
   
@@ -53,11 +50,11 @@ public class PhpStatementExecutor implements StatementExecutorInterface {
   }
 
   public boolean stopHasBeenRequested() {
-    return stopRequested;
+    return (Boolean) callMethod("stopHasBeenRequested");
   }
 
   public void reset() {
-    stopRequested = false;
+    callMethod("reset");
   }
 
   private Object callMethod(String method, Object... args) {
@@ -72,12 +69,6 @@ public class PhpStatementExecutor implements StatementExecutorInterface {
     StringWriter stringWriter = new StringWriter();
     PrintWriter pw = new PrintWriter(stringWriter);
     exception.printStackTrace(pw);
-    if (exception.getClass().toString().contains("StopTest")) {
-      stopRequested = true;
-      return SlimServer.EXCEPTION_STOP_TEST_TAG + stringWriter.toString();
-    }
-    else {
-      return SlimServer.EXCEPTION_TAG + stringWriter.toString();    
-    }
+    return SlimServer.EXCEPTION_TAG + stringWriter.toString();
   }
 }

@@ -1,0 +1,82 @@
+<project name="JavaPhpSlim" default="all" basedir="..">
+  <description>
+    PhpSlim Java bridge.
+  </description>
+
+  <path id="classpath">
+    <pathelement path="classes"/>
+    <fileset dir="lib">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <target name="all" depends="testbuild"
+          description="Run this target any time you change code or acceptance tests. It will clean, then compile the source, run all the unit test and fintesse acceptance tests."/>
+
+  <target name="build" depends="clean, compile" description="clean, then compile the source"/>
+
+  <target name="testbuild" depends="clean, unit_test, execute_fitnesse_tests"
+          description="builds code from scratch, runs all the unit tests and acceptance tests"/>
+
+  <target name="jar" depends="build" description="generate the jar file">
+    <mkdir dir="dist"/>
+    <delete file="dist/phpslim.jar"/>
+
+    <jar jarfile="dist/phpslim.jar" basedir="classes">
+      <include name="**/*.class"/>
+      <zipfileset src="lib/junit-4.6.jar" />
+      <zipfileset src="lib/JavaBridge.jar" />
+      <zipfileset src="lib/php-script.jar" />
+      <zipfileset src="lib/php-servlet.jar" />
+<!--
+        <zipfileset src="lib/fitnesse.jar" />
+-->
+        <manifest>
+        <attribute name="Built-By" value="Gregor Gramlich."/>
+        <attribute name="Main-Class" value="slim.PhpSlimService"/>
+      </manifest>
+    </jar>
+  </target>
+
+
+  <target name="compile" depends="init" description="compile the source (make)">
+    <javac srcdir="src" destdir="classes" classpathref="classpath" debug="true"/>
+  </target>
+
+  <target name="clean" description="delete everything in the classes directory">
+    <delete dir="classes"/>
+    <mkdir dir="classes"/>
+    <delete dir="test-results"/>
+  </target>
+
+  <target name="unit_test" depends="compile" description="run the unit tests">
+    <junit forkmode="once" fork="yes" printsummary="no" haltonfailure="yes" haltonerror="yes" dir="${basedir}">
+      <classpath refid="classpath"/>
+      <formatter type="xml" usefile="true"/>
+      <formatter type="plain" usefile="false"/>
+      <batchtest todir="test-results">
+        <fileset dir="src">
+          <include name="**/*Test.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  <target name="init">
+    <mkdir dir="classes"/>
+    <mkdir dir="test-results"/>
+  </target>
+
+  <target name="load_fitnesse_taskdef">
+    <taskdef classpathref="classpath" resource="tasks.properties"/>
+  </target>
+
+  <target name="execute_fitnesse_tests" depends="load_fitnesse_taskdef"
+          description="Executes the Fitnesse Acceptance Test Suite. This target starts fitnesse, executes the  Accetpance test suite, publishes the test results and stops fitnesse">
+    <run-fitnesse-tests wikidirectoryrootpath="${basedir}" suitepage="FitNesse.SuiteAcceptanceTests"
+                        fitnesseport="${env.FITNESSE_TEST_PORT}"
+                        resultsdir="test-results" resultsxmlpage="fit-results.xml" classpathref="classpath"/>
+  </target>
+
+  <target name="release" depends="testbuild, jar"/>
+</project>

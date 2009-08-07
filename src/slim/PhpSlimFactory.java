@@ -1,9 +1,10 @@
 package slim;
 
+import fitnesse.slim.SlimFactory;
 import fitnesse.slim.StatementExecutorInterface;
 
-public class PhpSlimFactory implements SlimFactory {
-  Bridge phpBridge;
+public class PhpSlimFactory extends SlimFactory {
+  private static Bridge phpBridge;
   
   public Bridge getBridge() {
     if (null == phpBridge) {

@@ -8,7 +8,8 @@ import org.junit.runners.Suite;
     PhpBridgeTest.class,
     PhpSlimInstanceCreationTest.class,
     PhpSlimMethodInvocationTest.class,
-    PhpListExecutorTest.class
+    PhpListExecutorTest.class,
+    PhpSlimServiceTest.class
   }
 )
 public class TestSuite {

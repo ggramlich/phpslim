@@ -24,7 +24,7 @@ public class PhpListExecutorTest {
 
   @Before
   public void setup() throws Exception {
-    executor = new PhpListExecutor();
+    executor = (new PhpSlimFactory()).getListExecutor(false);
     statements = new ArrayList<Object>();
     statements.add(list("i1", "import", "TestModule"));
     statements.add(list("m1", "make", "testSlim", "TestSlim"));
