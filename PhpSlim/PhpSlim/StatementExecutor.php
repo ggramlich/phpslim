@@ -32,28 +32,34 @@ class PhpSlim_StatementExecutor
         $classObject = $this->getClassObject($className);
         try {
             $reflectionConstructor = $classObject->getConstructor();
+            $argCount = count($constructorArguments);
             if (empty($reflectionConstructor)) {
                 if (empty($constructorArguments)) {
                     return $classObject->newInstance();
                 } else {
-                    throw new Exception;
+                    $this->throwInstantiationError($className, $argCount);
                 }
             }
-            if (count($constructorArguments) <
+            if ($argCount <
                     $reflectionConstructor->getNumberOfRequiredParameters()
-                    || count($constructorArguments) >
+                    || $argCount >
                     $reflectionConstructor->getNumberOfParameters()
                 ) {
-                throw new Exception;
+                $this->throwInstantiationError($className, $argCount);
             }
             return $classObject->newInstanceArgs($constructorArguments);
+        } catch (PhpSlim_SlimError_Instantiation $e) {
+            throw $e;
+        } catch (ReflectionException $e) {
+            $this->throwInstantiationError($className, $argCount);
         } catch (Exception $e) {
-            $message = sprintf(
-                "COULD_NOT_INVOKE_CONSTRUCTOR %s[%d]",
-                $className, count($constructorArguments)
-            );
-            throw new PhpSlim_SlimError_Message($message);
+            throw new PhpSlim_SlimError_Message($e->getMessage());
         }
+    }
+
+    private function throwInstantiationError($className, $argCount)
+    {
+        throw new PhpSlim_SlimError_Instantiation($className, $argCount);
     }
 
     public function instance($instanceName)

@@ -55,4 +55,23 @@ class PhpSlim_Tests_InstanceCreationTest extends PhpSlim_Tests_TestCase
             'failed to find in []';
         $this->assertErrorMessage($message, $result);
     }
+
+    public function testExceptionMessageThrownInConstructorIsPassedThrough()
+    {
+        $message = 'message thrown';
+        $result = $this->_caller->create(
+            'x', 'TestModule_ConstructorThrows', array($message)
+        );
+        $this->assertErrorMessage($message, $result);
+    }
+    
+    public function testCantCreateInstanceWithNoPublicConstructor()
+    {
+        $result = $this->_caller->create(
+            'x', 'TestModule_ClassWithNoPublicConstructor', array()
+        );
+        $message = 'COULD_NOT_INVOKE_CONSTRUCTOR ' .
+            'TestModule_ClassWithNoPublicConstructor[0]';
+        $this->assertErrorMessage($message, $result);
+    }
 }
