@@ -47,14 +47,14 @@ class PhpSlim_Java_StatementExecutor
         return $this->toJavaValue($result);
     }
 
-    public function instance($instanceName)
+    public function getInstance($instanceName)
     {
         $instanceName = java_cast($instanceName, 'string');
         $instance = $this->_executor->instance($instanceName);
         return $this->toJavaValue($instance);
     }
 
-    public function addModule($moduleName)
+    public function addPath($moduleName)
     {
         $moduleName = java_cast($moduleName, 'string');
         $result = $this->_executor->addModule($moduleName);
