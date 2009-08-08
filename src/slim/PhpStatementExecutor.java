@@ -1,8 +1,11 @@
 package slim;
 
+import fitnesse.slim.Jsr232Bridge;
+import fitnesse.slim.Jsr232StatementExecutor;
+
 public class PhpStatementExecutor extends Jsr232StatementExecutor {
 
-  public PhpStatementExecutor(Bridge bridge) throws Exception
+  public PhpStatementExecutor(Jsr232Bridge bridge) throws Exception
   {
     super(bridge);
   }

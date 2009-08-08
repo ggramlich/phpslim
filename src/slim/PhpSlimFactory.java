@@ -1,12 +1,13 @@
 package slim;
 
+import fitnesse.slim.Jsr232Bridge;
 import fitnesse.slim.SlimFactory;
 import fitnesse.slim.StatementExecutorInterface;
 
 public class PhpSlimFactory extends SlimFactory {
-  private static Bridge phpBridge;
+  private static Jsr232Bridge phpBridge;
   
-  public Bridge getBridge() {
+  public Jsr232Bridge getBridge() {
     if (null == phpBridge) {
       phpBridge = new PhpBridge();
     }

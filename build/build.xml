@@ -22,8 +22,13 @@
     <mkdir dir="dist"/>
     <delete file="dist/phpslim.jar"/>
 
+    <copy todir="classes/Resources">
+      <fileset dir="PhpSlim" />
+    </copy>
+
     <jar jarfile="dist/phpslim.jar" basedir="classes">
       <include name="**/*.class"/>
+      <include name="Resources/**/*.php" />
       <zipfileset src="lib/junit-4.6.jar" />
       <zipfileset src="lib/JavaBridge.jar" />
       <zipfileset src="lib/php-script.jar" />
