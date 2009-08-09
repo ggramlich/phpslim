@@ -5,11 +5,12 @@ if (isset($_SERVER['argv'][2])) {
     $channel = 'pear.php.net';
 }
 
-$api_version     = '1.0.0';
-$release_version = '1.0.0';
+$api_version     = '1.0.1';
+$release_version = '1.0.1';
 $release_state   = 'stable';
 $release_notes   = <<<EOT
-First release of PhpSlim as PEAR package.
+More intelligent handling of some types.
+Added JavaBridge code.
 EOT;
 
 require_once dirname(__FILE__) . '/../autoload.php';
