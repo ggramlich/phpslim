@@ -84,7 +84,10 @@
 
 
   <target name="compile" depends="init" description="compile the source (make)">
-    <javac srcdir="src" destdir="classes" classpathref="classpath" debug="true"/>
+    <javac srcdir="src" destdir="classes" classpathref="classpath" debug="true">
+        <exclude name = "**/*Test.java"/>
+        <exclude name = "**/TestSuite.java"/>
+    </javac>
   </target>
 
   <target name="clean" description="delete everything in the classes directory">
