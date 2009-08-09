@@ -1,18 +1,18 @@
 package slim;
 
-import fitnesse.slim.Jsr232Bridge;
+import fitnesse.slim.Jsr223Bridge;
 import fitnesse.slim.SlimFactory;
 import fitnesse.slim.StatementExecutorInterface;
 
 public class PhpSlimFactory extends SlimFactory {
-  private static Jsr232Bridge phpBridge;
+  private static Jsr223Bridge phpBridge;
   private String includePath;
   
   public PhpSlimFactory(String includePath) {
     this.includePath = includePath;
   }
   
-  public synchronized Jsr232Bridge getBridge() {
+  public synchronized Jsr223Bridge getBridge() {
     // Singleton behavior
     if (null == phpBridge) {
       phpBridge = new PhpBridge(includePath);

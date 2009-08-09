@@ -10,9 +10,9 @@ import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
-import fitnesse.slim.Jsr232Bridge;
+import fitnesse.slim.Jsr223Bridge;
 
-public class PhpBridge implements Jsr232Bridge {
+public class PhpBridge implements Jsr223Bridge {
   private ScriptEngine engine;
   private Proxy phpProxy;
   
