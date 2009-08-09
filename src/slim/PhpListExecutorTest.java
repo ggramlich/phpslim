@@ -10,22 +10,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fitnesse.slim.ListExecutor;
 import fitnesse.slim.SlimClient;
+import fitnesse.slim.SlimFactory;
 import fitnesse.slim.SlimServer;
+import fitnesse.slim.SlimError;
+
 import static slim.TestSuite.getTestIncludePath;
 
 public class PhpListExecutorTest {
   private List<Object> statements;
   private ListExecutor executor;
   private List<Object> expectedResults = new ArrayList<Object>();
+  private static SlimFactory slimFactory;
+  
+  @BeforeClass
+  public static void setUpClass() {
+    slimFactory = new PhpSlimFactory(getTestIncludePath());
+  }
+
+  @AfterClass
+  public static void tearDownClass() {
+    slimFactory.stop();
+  }
 
   @Before
   public void setup() throws Exception {
-    executor = (new PhpSlimFactory(getTestIncludePath()).getListExecutor(false));
+    executor = slimFactory.getListExecutor(false);
     statements = new ArrayList<Object>();
     statements.add(list("i1", "import", "TestModule"));
     statements.add(list("m1", "make", "testSlim", "TestSlim"));
@@ -46,18 +62,19 @@ public class PhpListExecutorTest {
   {
     respondsWith(list());
   }
-  //  @Test()
-//  public void invalidOperation() throws Exception {
-//    statements.add(list("inv1", "invalidOperation"));
-//    assertExceptionReturned("message:<<INVALID_STATEMENT: invalidOperation.>>", "inv1");
-//  }
-//
-//  @Test(expected = SlimError.class)
-//  public void malformedStatement() throws Exception {
-//    statements.add(list("id", "call", "notEnoughArguments"));
-//    assertExceptionReturned("XX", "id");
-//  }
-//
+
+  @Test()
+  public void invalidOperation() throws Exception {
+    statements.add(list("inv1", "invalidOperation"));
+    assertExceptionReturned("message:<<INVALID_STATEMENT: invalidOperation.>>", "inv1");
+  }
+
+  @Test(expected = SlimError.class)
+  public void malformedStatement() throws Exception {
+    statements.add(list("id", "call", "notEnoughArguments"));
+    assertExceptionReturned("XX", "id");
+  }
+
   private void assertExceptionReturned(String message, String returnTag) {
     Map<String, Object> results = SlimClient.resultToMap(executor.execute(statements));
     String result = (String) results.get(returnTag);
@@ -127,7 +144,6 @@ public class PhpListExecutorTest {
       )
     );
   }
-
 
   @Test
   public void multiFunctionCall() throws Exception {

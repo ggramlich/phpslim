@@ -22,7 +22,12 @@ public class PhpBridgeTest {
     // Creates Bridge only once
     bridge = new PhpBridge(getTestIncludePath());
   }
-  
+
+  @AfterClass
+  public static void tearDownClass() {
+    bridge.close();
+  }
+
   @Test
   public void get_internal_php_path() throws Exception {
     File path = new File(bridge.getIncludePath());

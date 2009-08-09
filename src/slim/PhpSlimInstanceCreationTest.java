@@ -7,6 +7,7 @@ import static slim.TestSuite.getTestIncludePath;
 
 import java.lang.reflect.Proxy;
 
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -24,6 +25,11 @@ public class PhpSlimInstanceCreationTest {
   public static void setUpClass() {
     // Creates Bridge only once
     slimFactory = new PhpSlimFactory(getTestIncludePath());
+  }
+
+  @AfterClass
+  public static void tearDownClass() {
+    slimFactory.stop();
   }
   
   @Before

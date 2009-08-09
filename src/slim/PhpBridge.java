@@ -1,5 +1,7 @@
 package slim;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Proxy;
@@ -67,5 +69,14 @@ public class PhpBridge implements Jsr232Bridge {
   
   public Invocable getInvocable() {
     return (Invocable) getScriptEngine();
+  }
+
+  @Override
+  public void close() {
+    try {
+      ((Closeable)engine).close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }

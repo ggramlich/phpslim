@@ -12,11 +12,21 @@ public class PhpSlimFactory extends SlimFactory {
     this.includePath = includePath;
   }
   
-  public Jsr232Bridge getBridge() {
+  public synchronized Jsr232Bridge getBridge() {
+    // Singleton behavior
     if (null == phpBridge) {
       phpBridge = new PhpBridge(includePath);
     }
     return phpBridge;
+  }
+  
+  public void stop() {
+    closeBridge();
+  }
+
+  private synchronized void closeBridge() {
+    getBridge().close();
+    phpBridge = null;
   }
   
   public StatementExecutorInterface getStatementExecutor() throws Exception {
