@@ -5,6 +5,7 @@ package slim;
 import static org.junit.Assert.*;
 
 import static util.ListUtility.list;
+import static slim.TestSuite.getTestIncludePath;
 
 import org.junit.*;
 
@@ -25,7 +26,7 @@ public class PhpSlimMethodInvocationTest {
   @BeforeClass
   public static void setUpClass() {
     // Creates Bridge only once
-    slimFactory = new PhpSlimFactory();
+    slimFactory = new PhpSlimFactory(getTestIncludePath());
   }
   
   @Before

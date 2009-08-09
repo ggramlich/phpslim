@@ -16,7 +16,7 @@ class PhpSlim_AutoLoader
      */
     private $_loadedClasses = array();
 
-    private function __construct()
+    protected function __construct()
     {
     }
 
@@ -43,7 +43,7 @@ class PhpSlim_AutoLoader
      * @return void
      * @throws Exception
      */
-    private function registerAutoLoad()
+    protected function registerAutoLoad()
     {
         if ($this->_registered) {
             return;
@@ -56,7 +56,7 @@ class PhpSlim_AutoLoader
         $this->_registered = true;
     }
 
-    private static function cleanupIncludePath()
+    protected static function cleanupIncludePath()
     {
         $paths = explode(PATH_SEPARATOR, get_include_path());
         $trimmedPaths = array_map(array('self', 'trimPath'), $paths);
@@ -77,7 +77,7 @@ class PhpSlim_AutoLoader
      * @return void
      * @throws Exception
      */
-    private function ensureIncludePath()
+    protected function ensureIncludePath()
     {
         // check, if my own class definition is loadable
         $path = $this->getPath(__CLASS__) . '.php';
@@ -86,6 +86,11 @@ class PhpSlim_AutoLoader
             $newPath = get_include_path() . PATH_SEPARATOR . $basePath;
             set_include_path($newPath);
         }
+        $this->ensureMyClassIsOnPath($path);
+    }
+
+    protected function ensureMyClassIsOnPath($path)
+    {
         if (false === self::getIncludableFile($path)) {
             throw new Exception('Cannot set include path');
         }

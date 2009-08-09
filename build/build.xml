@@ -18,17 +18,56 @@
   <target name="testbuild" depends="clean, unit_test, execute_fitnesse_tests"
           description="builds code from scratch, runs all the unit tests and acceptance tests"/>
 
-  <target name="jar" depends="build" description="generate the jar file">
+  <target name="singlephp" description="create a single Php file for JSR232 access">
+    <mkdir dir="lib/tmp" />
+    
+    <filelist id="phpfiles" dir="PhpSlim">
+        <file name="PhpSlim/AutoLoader.php" />
+        <file name="PhpSlim/AutoLoaderInJar.php" />
+        <file name="PhpSlim.php" />
+        <file name="PhpSlim/Java/Proxy.php" />
+        <file name="PhpSlim/Java/StatementExecutor.php" />
+        <file name="PhpSlim/StatementExecutor.php" />
+        <file name="PhpSlim/TypeConverter.php" />
+        <file name="PhpSlim/SymbolRepository.php" />
+        <file name="PhpSlim/SlimError.php" />
+        <file name="PhpSlim/SlimError/Instantiation.php" />
+        <file name="PhpSlim/SlimError/Message.php" />
+        <file name="PhpSlim/SlimError/StopTest.php" />
+        <file name="getPhpSlimProxy.php" />
+    </filelist>
+
+    <copy todir="lib/tmp">
+        <filelist refid="phpfiles" />
+    </copy>
+
+    <replace dir="lib/tmp" value="">
+      <include name="**/*.php"/>
+      <replacetoken><![CDATA[<?php]]></replacetoken>
+    </replace>
+
+    <concat destfile="src/slim/phplib/getPhpSlimProxy.php" fixlastline="no">
+        <fileset dir="lib/tmp" />
+        <header filtering="no" trimleading="yes"><![CDATA[<?php
+        ]]>
+        </header>
+        <footer filtering="no" trimleading="yes"><![CDATA[//]]></footer>
+    </concat>
+    <delete dir="lib/tmp" />
+  </target>
+
+  <target name="jar" depends="singlephp, build" description="generate the jar file">
     <mkdir dir="dist"/>
     <delete file="dist/phpslim.jar"/>
 
-    <copy todir="classes/Resources">
-      <fileset dir="PhpSlim" />
+    <copy todir="classes/slim/phplib">
+      <fileset file="src/slim/phplib/getPhpSlimProxy.php" />
     </copy>
+
 
     <jar jarfile="dist/phpslim.jar" basedir="classes">
       <include name="**/*.class"/>
-      <include name="Resources/**/*.php" />
+      <include name="slim/phplib/getPhpSlimProxy.php" />
       <zipfileset src="lib/junit-4.6.jar" />
       <zipfileset src="lib/JavaBridge.jar" />
       <zipfileset src="lib/php-script.jar" />

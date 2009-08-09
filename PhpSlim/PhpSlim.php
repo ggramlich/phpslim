@@ -1,5 +1,7 @@
 <?php
-require_once 'PhpSlim/AutoLoader.php';
+if (!class_exists('PhpSlim_AutoLoader', false)) {
+    require_once 'PhpSlim/AutoLoader.php';
+}
 
 class PhpSlim
 {

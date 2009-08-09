@@ -16,6 +16,7 @@ import org.junit.Test;
 import fitnesse.slim.ListExecutor;
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.SlimServer;
+import static slim.TestSuite.getTestIncludePath;
 
 public class PhpListExecutorTest {
   private List<Object> statements;
@@ -24,7 +25,7 @@ public class PhpListExecutorTest {
 
   @Before
   public void setup() throws Exception {
-    executor = (new PhpSlimFactory()).getListExecutor(false);
+    executor = (new PhpSlimFactory(getTestIncludePath()).getListExecutor(false));
     statements = new ArrayList<Object>();
     statements.add(list("i1", "import", "TestModule"));
     statements.add(list("m1", "make", "testSlim", "TestSlim"));

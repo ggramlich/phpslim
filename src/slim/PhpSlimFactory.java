@@ -6,10 +6,15 @@ import fitnesse.slim.StatementExecutorInterface;
 
 public class PhpSlimFactory extends SlimFactory {
   private static Jsr232Bridge phpBridge;
+  private String includePath;
+  
+  public PhpSlimFactory(String includePath) {
+    this.includePath = includePath;
+  }
   
   public Jsr232Bridge getBridge() {
     if (null == phpBridge) {
-      phpBridge = new PhpBridge();
+      phpBridge = new PhpBridge(includePath);
     }
     return phpBridge;
   }
