@@ -1,19 +1,15 @@
 package slim;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Proxy;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 
 import fitnesse.slim.Jsr223Bridge;
 
-public class PhpBridge implements Jsr223Bridge {
-  private ScriptEngine engine;
+public class PhpBridge extends Jsr223Bridge {
   private Proxy phpProxy;
   
   private static final String ENGINE_NAME = "php-invocable";
@@ -60,23 +56,13 @@ public class PhpBridge implements Jsr223Bridge {
     return new InputStreamReader(in);
   }
 
-  public ScriptEngine getScriptEngine() {
-    if (engine == null) {
-      engine = new ScriptEngineManager().getEngineByName(ENGINE_NAME);
-    }
-    return engine;
-  }
   
   public Invocable getInvocable() {
     return (Invocable) getScriptEngine();
   }
 
   @Override
-  public void close() {
-    try {
-      ((Closeable)engine).close();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+  public String getEngineName() {
+    return ENGINE_NAME;
   }
 }
