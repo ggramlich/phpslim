@@ -27,7 +27,7 @@ class PhpSlim_TypeConverter
             return (string) $object;
         }
         if (is_array($object)) {
-            return self::inspectArray($object);
+            return self::inspectArrayNoQuotes($object);
         }
         if (is_null($object)) {
             return 'null';

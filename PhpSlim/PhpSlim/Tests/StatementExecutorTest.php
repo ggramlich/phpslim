@@ -15,8 +15,7 @@ class PhpSlim_Tests_StatementExecutorTest extends PhpSlim_Tests_TestCase
             $this->_executor->requireClass('MyModule_MyClass');
             $this->fail();
         } catch (PhpSlim_SlimError $exception) {
-            $message = 'COULD_NOT_INVOKE_CONSTRUCTOR MyModule_MyClass ' .
-                'failed to find in ["MyModule"]';
+            $message = 'COULD_NOT_INVOKE_CONSTRUCTOR MyModule_MyClass[0]';
             $errorMessage = PhpSlim::tagErrorMessage($exception->getMessage());
             $this->assertErrorMessage($message, $errorMessage);
         }

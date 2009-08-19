@@ -43,7 +43,7 @@ class PhpSlim_Tests_InstanceCreationTest extends PhpSlim_Tests_TestCase
             'x', 'TestModule_TestSlim', array('optionalArg', 'noSuchArgument')
         );
         $message = 'COULD_NOT_INVOKE_CONSTRUCTOR TestModule_TestSlim[2]';
-        $this->assertErrorMessage($message, $result);
+        $this->assertErrorMessageOpenEnd($message, $result);
     }
 
     public function testCantCreateAnInstanceIfThereIsNoClass()
@@ -51,8 +51,7 @@ class PhpSlim_Tests_InstanceCreationTest extends PhpSlim_Tests_TestCase
         $result = $this->_caller->create(
             'x', 'TestModule_NoSuchClass', array()
         );
-        $message = 'COULD_NOT_INVOKE_CONSTRUCTOR TestModule_NoSuchClass ' .
-            'failed to find in []';
+        $message = 'COULD_NOT_INVOKE_CONSTRUCTOR TestModule_NoSuchClass[0]';
         $this->assertErrorMessage($message, $result);
     }
 
@@ -62,7 +61,8 @@ class PhpSlim_Tests_InstanceCreationTest extends PhpSlim_Tests_TestCase
         $result = $this->_caller->create(
             'x', 'TestModule_ConstructorThrows', array($message)
         );
-        $this->assertErrorMessage($message, $result);
+        $error = 'COULD_NOT_INVOKE_CONSTRUCTOR TestModule_ConstructorThrows[1]';
+        $this->assertErrorMessageOpenEnd($error . "\n" . $message, $result);
     }
     
     public function testCantCreateInstanceWithNoPublicConstructor()

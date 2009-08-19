@@ -8,6 +8,13 @@ abstract class PhpSlim_Tests_TestCase extends PHPUnit_Framework_TestCase
         );
     }
 
+    protected function assertErrorMessageOpenEnd($message, $result)
+    {
+        $this->assertContains(
+            PhpSlim::EXCEPTION_TAG . 'message:<<' . $message, $result
+        );
+    }
+
     protected function assertStopTestMessage($message, $result)
     {
         $this->assertContains(

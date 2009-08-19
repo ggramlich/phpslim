@@ -5,7 +5,7 @@ class PhpSlim_Tests_StatementTest extends PhpSlim_Tests_TestCase
 
     public function setup()
     {
-        $this->_statement = new PhpSlim_Statement('');
+        $this->_statement = new PhpSlim_StatementExecutor();
     }
 
     public function testTranslateSlimClassNamesToPhpClassNames()

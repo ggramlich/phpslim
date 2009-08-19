@@ -43,13 +43,13 @@ class PhpSlim_Statement
             switch($this->operation()) {
             case 'make':
                 $instanceName = $this->getWord(2);
-                $className = $this->slimToPhpClass($this->getWord(3));
+                $className = $this->getWord(3);
                 $result = $this->_executor->create(
                     $instanceName, $className, $this->getArgs(4)
                 );
                 return $this->getExecResultRow($result);
             case 'import':
-                $moduleName = $this->slimToPhpClass($this->getWord(2));
+                $moduleName = $this->getWord(2);
                 $this->_executor->addModule($moduleName);
                 return $this->getExecResultRow('OK');
             case 'call':
@@ -84,7 +84,7 @@ class PhpSlim_Statement
     private function callMethodAtIndex($index)
     {
         $instanceName = $this->getWord($index);
-        $methodName = $this->slimToPhpMethod($this->getWord($index + 1));
+        $methodName = $this->getWord($index + 1);
         $args = $this->getArgs($index + 2);
         $result = $this->_executor->call($instanceName, $methodName, $args);
         return $this->getExecResultRow($result);
@@ -120,26 +120,6 @@ class PhpSlim_Statement
             );
             throw new PhpSlim_SlimError_Message($message);
         }
-    }
-
-    /**
-     * @param string $className
-     * @return string
-     */
-    public function slimToPhpClass($className)
-    {
-        $parts = preg_split('/\.|\:\:|\_/', $className);
-        $converted = array_map('ucfirst', $parts);
-        return implode('_', $converted);
-    }
-
-    /**
-     * @param string $method
-     * @return string
-     */
-    public function slimToPhpMethod($method)
-    {
-        return strtolower(mb_substr($method, 0, 1)) . mb_substr($method, 1);
     }
 
     public static function inspectArray($array)

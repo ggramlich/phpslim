@@ -27,6 +27,9 @@ class TestModule_TestSlim
 
     public function __construct($constructorArg = 0)
     {
+        if (!is_numeric($constructorArg)) {
+            throw new Exception('Bad Argument');
+        }
         $this->_constructorArg = $constructorArg;
     }
 
@@ -75,7 +78,7 @@ class TestModule_TestSlim
 
     public function getIntegerArray()
     {
-        return $this->_integerArray;
+        return $this->getIntegerArrayAsString();
     }
 
     public function getIntegerArrayAsString()
@@ -136,6 +139,9 @@ class TestModule_TestSlim
 
     public function echoString($s)
     {
+        if (is_null($s)) {
+            return null;
+        }
         return PhpSlim_TypeConverter::toString($s);
     }
     

@@ -384,12 +384,15 @@ class PhpSlim_SlimError extends Exception
 
 class PhpSlim_SlimError_Instantiation extends PhpSlim_SlimError_Message
 {
-    public function __construct($className, $argCount)
+    public function __construct($className, $argCount, $additional = "")
     {
         $message = sprintf(
             "COULD_NOT_INVOKE_CONSTRUCTOR %s[%d]",
             $className, $argCount
         );
+        if (!empty($additional)) {
+            $message .= "\n" . $additional;
+        }
         parent::__construct($message);
     }
 }
@@ -439,10 +442,10 @@ class PhpSlim_StatementExecutor
 
     private function constructInstance($className, array $constructorArguments)
     {
-        $classObject = $this->getClassObject($className);
+        $argCount = count($constructorArguments);
+        $classObject = $this->getClassObject($className, $argCount);
         try {
             $reflectionConstructor = $classObject->getConstructor();
-            $argCount = count($constructorArguments);
             if (empty($reflectionConstructor)) {
                 if (empty($constructorArguments)) {
                     return $classObject->newInstance();
@@ -459,17 +462,25 @@ class PhpSlim_StatementExecutor
             }
             return $classObject->newInstanceArgs($constructorArguments);
         } catch (PhpSlim_SlimError_Instantiation $e) {
-            throw $e;
+            $this->throwInstantiationError($className, $argCount, $e);
         } catch (ReflectionException $e) {
             $this->throwInstantiationError($className, $argCount);
         } catch (Exception $e) {
-            throw new PhpSlim_SlimError_Message($e->getMessage());
+            $this->throwInstantiationError($className, $argCount, $e);
         }
     }
 
-    private function throwInstantiationError($className, $argCount)
+    private function throwInstantiationError($className, $argCount, $e = null)
     {
-        throw new PhpSlim_SlimError_Instantiation($className, $argCount);
+        $additional = '';
+        if (!empty($e)) {
+            $additional = $e->getMessage() . "\n" . $e;
+        }
+        throw new PhpSlim_SlimError_Instantiation(
+            $className,
+            $argCount,
+            $additional
+        );
     }
 
     public function instance($instanceName)
@@ -483,6 +494,7 @@ class PhpSlim_StatementExecutor
 
     public function call($instanceName, $methodName, $args = array())
     {
+        $methodName = $this->slimToPhpMethod($methodName);
         try {
             $args = (array) $args;
             $instance = $this->instance($instanceName);
@@ -538,12 +550,12 @@ class PhpSlim_StatementExecutor
         return 'OK';
     }
 
-    private function getClassObject($className)
+    private function getClassObject($className, $argCount)
     {
-        return new ReflectionClass($this->requireClass($className));
+        return new ReflectionClass($this->requireClass($className, $argCount));
     }
 
-    public function requireClass($className)
+    public function requireClass($className, $argCount = 0)
     {
         $fullyQualifiedNames = $this->getFullyQualifiedClassNames($className);
         foreach ($fullyQualifiedNames as $fullyQualifiedName) {
@@ -552,12 +564,7 @@ class PhpSlim_StatementExecutor
                 return $fullyQualifiedName;
             }
         }
-        $modules = PhpSlim_TypeConverter::inspectArray($this->_modules);
-        $message = sprintf(
-            'COULD_NOT_INVOKE_CONSTRUCTOR %s failed to find in %s',
-            $className, $modules
-        );
-        throw new PhpSlim_SlimError_Message($message);
+        $this->throwInstantiationError($className, $argCount);
     }
 
     /**
@@ -568,10 +575,30 @@ class PhpSlim_StatementExecutor
     {
         $names = array();
         foreach ($this->_modules as $moduleName) {
-            $names[] = $moduleName . '_' . $className;
+            $names[] = $this->slimToPhpClass($moduleName . '.' . $className);
         }
-        $names[] = $className;
+        $names[] = $this->slimToPhpClass($className);
         return array_reverse($names);
+    }
+
+    /**
+     * @param string $className
+     * @return string
+     */
+    public function slimToPhpClass($className)
+    {
+        $parts = preg_split('/\.|\:\:|\_/', $className);
+        $converted = array_map('ucfirst', $parts);
+        return implode('_', $converted);
+    }
+
+    /**
+     * @param string $method
+     * @return string
+     */
+    public function slimToPhpMethod($method)
+    {
+        return strtolower(mb_substr($method, 0, 1)) . mb_substr($method, 1);
     }
 
     public function setSymbol($name, $value)
@@ -607,6 +634,9 @@ class PhpSlim_SymbolRepository
 
     public function setSymbol($name, $value)
     {
+        if (is_null($value)) {
+            $value = 'null';
+        }
         $this->_symbols[$name] = $value;
         // Sort it reverse, so for non-prefix-free symbol combinations 
         // the longest symbol is replaced first
@@ -699,7 +729,7 @@ class PhpSlim_TypeConverter
             return (string) $object;
         }
         if (is_array($object)) {
-            return self::inspectArray($object);
+            return self::inspectArrayNoQuotes($object);
         }
         if (is_null($object)) {
             return 'null';
