@@ -1,8 +1,16 @@
 package slim.testModule;
 
-import fitnesse.slim.StatementExecutorInterface;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
-public class TestSlimProxy {
+import fitnesse.slim.StatementExecutorInterface;
+import fitnesse.slim.test.TestSlimInterface;
+import fitnesse.slim.test.Zork;
+
+public class TestSlimProxy implements TestSlimInterface {
   private String testSlim;
   private StatementExecutorInterface caller;
 
@@ -11,8 +19,8 @@ public class TestSlimProxy {
     this.caller = caller;
   }
 
-  public String niladWasCalled() {
-    return (String) caller.call(testSlim, "niladWasCalled"); 
+  public boolean niladWasCalled() {
+    return "true".equals(caller.call(testSlim, "niladWasCalled")); 
   }
 
   public String getStringArg() {
@@ -27,28 +35,38 @@ public class TestSlimProxy {
     return Double.parseDouble((String) caller.call(testSlim, "getValue"));
   }
 
-  public String getDateArg() {
-    return (String) caller.call(testSlim, "getValue");
+  public Date getDateArg() {
+    try {
+      return (new SimpleDateFormat("dd-MMM-yyyy", Locale.US)).parse((String) caller.call(testSlim, "getValue"));
+    } catch (ParseException e) {
+      return null;
+    }
   }
 
-  public Object getListArg() {
-    return caller.call(testSlim, "getListArg");
+  @SuppressWarnings("unchecked")
+  public List<Object> getListArg() {
+    return (List<Object>) caller.call(testSlim, "getListArg");
   }
 
   public Integer getIntegerObjectArg() {
     return Integer.parseInt((String) caller.call(testSlim, "getIntegerObjectArg"));
   }
 
-  public Double getDoubleObjectArg() {
+  public double getDoubleObjectArg() {
     return Double.valueOf((String) caller.call(testSlim, "getDoubleObjectArg"));
   }
   
-  public Object getCharArg() throws Exception {
+  public char getCharArg() {
     String result = (String) caller.call(testSlim, "getCharArg");
     if (1 != result.length()) {
-      throw new Exception("Did not get single character string");
+      return '_';
     }
     return result.toCharArray()[0];
+  }
+
+  @Override
+  public Zork getZork() {
+    return null;
   }
   
 }

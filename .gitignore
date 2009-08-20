@@ -9,3 +9,5 @@ PhpSlim/build/PEAR
 PhpSlim/build/log
 classes
 dist
+test-results
+

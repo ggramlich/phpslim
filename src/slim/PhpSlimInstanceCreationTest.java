@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package slim;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 import static slim.TestSuite.getTestIncludePath;
 
 import java.lang.reflect.Proxy;
@@ -10,14 +10,11 @@ import java.lang.reflect.Proxy;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 import fitnesse.slim.SlimFactory;
-import fitnesse.slim.SlimServer;
-import fitnesse.slim.StatementExecutorInterface;
+import fitnesse.slim.SlimInstanceCreationTestBase;
 
-public class PhpSlimInstanceCreationTest {
-  private StatementExecutorInterface caller;
+public class PhpSlimInstanceCreationTest extends SlimInstanceCreationTestBase {
 
   private static SlimFactory slimFactory;
   
@@ -37,42 +34,14 @@ public class PhpSlimInstanceCreationTest {
     caller = slimFactory.getStatementExecutor();
   }
 
-  @Test
-  public void canCreateInstance() throws Exception {
-    Object response = caller.create("x", "TestModule_TestSlim", new Object[0]);
-    assertEquals("OK", response);
-    Proxy x = (Proxy) caller.getInstance("x");
-    assertNotNull(x);
+  @Override
+  protected void assertInstanceOfTestSlim(Object x) {
+    assertTrue(x instanceof Proxy);
   }
 
-  @Test
-  public void canCreateInstanceWithArguments() throws Exception {
-    Object response = caller.create("x", "TestModule_TestSlimWithArguments", new Object[]{"3"});
-    assertEquals("OK", response);
-    Proxy x = (Proxy) caller.getInstance("x");
-    assertNotNull(x);
+  @Override
+  protected String getTestClassPath() {
+    return "TestModule";
   }
 
-
-  @Test
-  public void cantCreateInstanceIfConstructorArgumentCountIncorrect() throws Exception {
-    String result = (String) caller.create("x", "TestModule_TestSlimWithArguments", new Object[]{"3", "4"});
-    assertException("message:<<COULD_NOT_INVOKE_CONSTRUCTOR TestModule_TestSlimWithArguments[2]>>", result);
-  }
-
-  @Test
-  public void throwsInstanceNotCreatedErrorIfNoSuchClass() throws Exception {
-    String result = (String) caller.create("x", "TestModule_NoSuchClass", new Object[0]);
-    assertException("message:<<COULD_NOT_INVOKE_CONSTRUCTOR TestModule_NoSuchClass", result);
-  }
-
-  @Test
-  public void throwsInstanceNotCreatedErrorIfNoPublicDefaultConstructor() throws Exception {
-    String result = (String) caller.create("x", "TestModule_ClassWithNoPublicConstructor", new Object[0]);
-    assertException("message:<<COULD_NOT_INVOKE_CONSTRUCTOR TestModule_ClassWithNoPublicConstructor[0]>>", result);
-  }
-
-  private void assertException(String message, String result) {
-    assertTrue(result, result.indexOf(SlimServer.EXCEPTION_TAG) != -1 && result.indexOf(message) != -1);
-  }
 }

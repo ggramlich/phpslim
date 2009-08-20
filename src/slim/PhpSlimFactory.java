@@ -1,6 +1,8 @@
 package slim;
 
 import fitnesse.slim.Jsr223Bridge;
+import fitnesse.slim.NameTranslator;
+import fitnesse.slim.NameTranslatorIdentity;
 import fitnesse.slim.SlimFactory;
 import fitnesse.slim.StatementExecutorInterface;
 
@@ -31,6 +33,11 @@ public class PhpSlimFactory extends SlimFactory {
   
   public StatementExecutorInterface getStatementExecutor() throws Exception {
     return new PhpStatementExecutor(getBridge());
+  }
+
+  @Override
+  public NameTranslator getMethodNameTranslator() {
+    return new NameTranslatorIdentity();
   }
   
 }

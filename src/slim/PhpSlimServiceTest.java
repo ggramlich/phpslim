@@ -1,9 +1,9 @@
 package slim;
 
-import fitnesse.slim.SlimServiceTest;
+import fitnesse.slim.SlimServiceTestBase;
 import static slim.TestSuite.getTestIncludePath;
 
-public class PhpSlimServiceTest extends SlimServiceTest {
+public class PhpSlimServiceTest extends SlimServiceTestBase {
   protected void startSlimService() throws Exception {
     PhpSlimService.main(new String[]{getTestIncludePath(), "8099"});
   }
