@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Proxy;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
@@ -54,7 +53,7 @@ public class PhpBridgeTest {
 
   @Test
   public void get_php_statement_executor() throws Exception {
-    Proxy statementExecutor = bridge.getStatementExecutor();
+    Object statementExecutor = bridge.getStatementExecutor();
     assertNotNull(statementExecutor);
     Invocable inv = (Invocable) bridge.getScriptEngine();
     inv.invokeMethod(statementExecutor, "setSymbol", new Object[]{"name", "Bob"});

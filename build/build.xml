@@ -73,16 +73,18 @@
     <jar jarfile="dist/phpslim.jar" basedir="classes">
       <exclude name = "**/*Test.class"/>
       <exclude name = "**/TestSuite.class"/>
+      <exclude name = "**/testModule/**"/>
       <include name="**/*.class"/>
       <include name="slim/phplib/getPhpSlimProxy.php" />
-      <zipfileset src="lib/junit-4.6.jar" />
       <zipfileset src="lib/JavaBridge.jar" />
       <zipfileset src="lib/php-script.jar" />
-      <zipfileset src="lib/php-servlet.jar" />
-<!--
-        <zipfileset src="lib/fitnesse.jar" />
--->
-        <manifest>
+      <zipfileset src="lib/fitnesse.jar">
+        <exclude name = "**/*TestBase.class"/>
+        <include name="fitnesse/slim/*.class"/>
+        <include name="fitnesse/socketservice/*.class"/>
+        <include name="util/*.class"/>
+      </zipfileset>
+      <manifest>
         <attribute name="Built-By" value="Gregor Gramlich."/>
         <attribute name="Main-Class" value="slim.PhpSlimService"/>
       </manifest>

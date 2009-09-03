@@ -1,5 +1,7 @@
 package slim;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Proxy;
@@ -33,8 +35,8 @@ public class PhpBridge extends Jsr223Bridge {
     return includePath;
   }
 
-  public Proxy getStatementExecutor() throws Exception {
-    return (Proxy) invokeMethod(getPhpProxy(), STATEMENT_EXECUTOR_METHOD, new Object[0]);
+  public Object getStatementExecutor() throws Exception {
+    return invokeMethod(getPhpProxy(), STATEMENT_EXECUTOR_METHOD, new Object[0]);
   }
 
   public Object invokeMethod(Object thiz, String name, Object... args) throws Exception {
@@ -64,5 +66,13 @@ public class PhpBridge extends Jsr223Bridge {
   @Override
   public String getEngineName() {
     return ENGINE_NAME;
+  }
+
+  public void close() {
+    try {
+      ((Closeable)getScriptEngine()).close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }
