@@ -10,4 +10,4 @@ PhpSlim/build/log
 classes
 dist
 test-results
-
+.tmp*
