@@ -16,10 +16,14 @@ public class PhpSlimService extends SlimService {
   }
 
   protected static boolean parseCommandLine(String[] args) {
-    CommandLine commandLine = new CommandLine("[-v] includepath port");
+    CommandLine commandLine = new CommandLine("[-v] [-i includepath] port");
     if (commandLine.parse(args)) {
       verbose = commandLine.hasOption("v");
-      includePath = commandLine.getArgument("includepath");
+      if (commandLine.hasOption("i")) {
+          includePath = commandLine.getOptionArgument("i", "includepath");
+      } else {
+          includePath = System.getProperty("java.class.path");
+      }
       String portString = commandLine.getArgument("port");
       port = Integer.parseInt(portString);
       return true;

@@ -5,7 +5,7 @@ import static slim.TestSuite.getTestIncludePath;
 
 public class PhpSlimServiceTest extends SlimServiceTestBase {
   protected void startSlimService() throws Exception {
-    PhpSlimService.main(new String[]{getTestIncludePath(), "8099"});
+    PhpSlimService.main(new String[]{"-i", getTestIncludePath(), "8099"});
   }
 
   protected String getImport() {
