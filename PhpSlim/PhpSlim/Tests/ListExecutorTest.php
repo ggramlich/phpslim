@@ -18,7 +18,7 @@ class PhpSlim_Tests_ListExecutorTest extends PhpSlim_Tests_TestCase
         $this->_statements[] = func_get_args();
     }
 
-    private function getResult($id, $resultList)
+    private function getResultFomList($id, $resultList)
     {
         $map = $this->pairsToMap($resultList);
         return $map[$id];
@@ -37,7 +37,7 @@ class PhpSlim_Tests_ListExecutorTest extends PhpSlim_Tests_TestCase
     {
         $results = $this->execute();
         foreach ($expectations as $id => $expected) {
-            $result = $this->getResult($id, $results);
+            $result = $this->getResultFomList($id, $results);
             $this->assertEquals($expected, $result);
         }
     }
@@ -59,7 +59,7 @@ class PhpSlim_Tests_ListExecutorTest extends PhpSlim_Tests_TestCase
     {
         $this->addStatement('inv1', 'invalidOperation');
         $results = $this->execute();
-        $result = $this->getResult('inv1', $results);
+        $result = $this->getResultFomList('inv1', $results);
         $message = 'INVALID_STATEMENT: ["inv1", "invalidOperation"].';
         $this->assertErrorMessage($message, $result);
     }
@@ -68,7 +68,7 @@ class PhpSlim_Tests_ListExecutorTest extends PhpSlim_Tests_TestCase
     {
         $this->addStatement('id', 'call', 'notEnoughArguments');
         $results = $this->execute();
-        $result = $this->getResult('id', $results);
+        $result = $this->getResultFomList('id', $results);
         $message = 'MALFORMED_INSTRUCTION ' .
             '["id", "call", "notEnoughArguments"].';
         $this->assertErrorMessage($message, $result);
@@ -78,7 +78,7 @@ class PhpSlim_Tests_ListExecutorTest extends PhpSlim_Tests_TestCase
     {
         $this->addStatement('id', 'call', 'noSuchInstance', 'noSuchMethod');
         $results = $this->execute();
-        $result = $this->getResult('id', $results);
+        $result = $this->getResultFomList('id', $results);
         $message = 'NO_INSTANCE noSuchInstance.';
         $this->assertErrorMessage($message, $result);
     }
@@ -197,7 +197,7 @@ class PhpSlim_Tests_ListExecutorTest extends PhpSlim_Tests_TestCase
     {
         $this->addStatement("id", "call", "testSlim", "triggerError");
         $results = $this->execute();
-        $result = $this->getResult('id', $results);
+        $result = $this->getResultFomList('id', $results);
         $this->assertContains(PhpSlim::EXCEPTION_TAG, $result);
     }
 
@@ -207,7 +207,7 @@ class PhpSlim_Tests_ListExecutorTest extends PhpSlim_Tests_TestCase
         $oldLevel = error_reporting(E_ALL ^ E_WARNING);
         $results = $this->execute();
         error_reporting($oldLevel);
-        $result = $this->getResult('id', $results);
+        $result = $this->getResultFomList('id', $results);
         $this->assertFalse($result);
     }
 
@@ -215,7 +215,7 @@ class PhpSlim_Tests_ListExecutorTest extends PhpSlim_Tests_TestCase
     {
         $this->addStatement("id", "call", "testSlim", "raiseStopException");
         $results = $this->execute();
-        $result = $this->getResult('id', $results);
+        $result = $this->getResultFomList('id', $results);
         $this->assertContains(PhpSlim::EXCEPTION_STOP_TEST_TAG, $result);
         $this->assertStopTestMessage('test stopped in TestSlim', $result);
     }

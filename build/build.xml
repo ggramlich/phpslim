@@ -10,18 +10,18 @@
     </fileset>
   </path>
 
-  <target name="all" depends="testbuild"
+  <target name="all" depends="release"
           description="Run this target any time you change code or acceptance tests. It will clean, then compile the source, run all the unit test and fintesse acceptance tests."/>
 
-  <target name="build" depends="clean, compile, singlephp" description="clean, then compile the source">
+  <target name="build" depends="clean, singlephp, compile" description="clean, then compile the source">
     <copy todir="classes/slim/phplib">
       <fileset file="src/slim/phplib/getPhpSlimProxy.php" />
       <fileset file="src/slim/phplib/addOne.php" />
     </copy>
   </target>
 
-  <target name="testbuild" depends="clean, unit_test, execute_fitnesse_tests"
-          description="builds code from scratch, runs all the unit tests and acceptance tests"/>
+  <target name="testbuild" depends="clean, unit_test"
+          description="builds code from scratch, runs all the unit tests"/>
 
   <target name="singlephp" description="create a single Php file for JSR232 access">
     <mkdir dir="lib/tmp" />
@@ -119,17 +119,6 @@
   <target name="init">
     <mkdir dir="classes"/>
     <mkdir dir="test-results"/>
-  </target>
-
-  <target name="load_fitnesse_taskdef">
-    <taskdef classpathref="classpath" resource="tasks.properties"/>
-  </target>
-
-  <target name="execute_fitnesse_tests" depends="load_fitnesse_taskdef"
-          description="Executes the Fitnesse Acceptance Test Suite. This target starts fitnesse, executes the  Accetpance test suite, publishes the test results and stops fitnesse">
-    <run-fitnesse-tests wikidirectoryrootpath="${basedir}" suitepage="FitNesse.SuiteAcceptanceTests"
-                        fitnesseport="${env.FITNESSE_TEST_PORT}"
-                        resultsdir="test-results" resultsxmlpage="fit-results.xml" classpathref="classpath"/>
   </target>
 
   <target name="release" depends="testbuild, jar"/>

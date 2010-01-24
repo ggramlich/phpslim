@@ -91,7 +91,7 @@ class PhpSlim_Tests_MethodInvocationTest extends PhpSlim_Tests_TestCase
         $result = $this->_executor->call('testSlim', 'echoValue', '$v');
         $this->assertEquals(array('a', 'b'), $result);
     }
-    
+
     public function testReplaceSymbolThatIsPrefixOfAnother()
     {
         $this->_executor->setSymbol('ab', '<ab>');

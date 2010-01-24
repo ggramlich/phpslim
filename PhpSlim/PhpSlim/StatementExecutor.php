@@ -3,8 +3,11 @@ class PhpSlim_StatementExecutor
 {
     private $_instances = array();
     private $_modules = array();
+    private $_libraries = array();
     private $_symbolRepository;
     private $_stopRequested = false;
+
+    const LIBRARY_PREFIX = 'library';
 
     public function __construct()
     {
@@ -18,6 +21,9 @@ class PhpSlim_StatementExecutor
             $instance = $this->constructInstance(
                 $className, $this->replaceSymbols($constructorArguments)
             );
+            if ($this->isLibraryName($instanceName)) {
+                $this->_libraries[] = $instance;
+            }
             $this->_instances[$instanceName] = $instance;
             return 'OK';
         } catch (PhpSlim_SlimError $e) {
@@ -25,6 +31,12 @@ class PhpSlim_StatementExecutor
         } catch (Exception $e) {
             return $this->exceptionToString($e);
         }
+    }
+
+    private function isLibraryName($instanceName)
+    {
+        $length = strlen(self::LIBRARY_PREFIX);
+        return (self::LIBRARY_PREFIX === substr($instanceName, 0, $length));
     }
 
     private function constructInstance($className, array $constructorArguments)
@@ -41,10 +53,10 @@ class PhpSlim_StatementExecutor
                 }
             }
             if ($argCount <
-                    $reflectionConstructor->getNumberOfRequiredParameters()
-                    || $argCount >
-                    $reflectionConstructor->getNumberOfParameters()
-                ) {
+                $reflectionConstructor->getNumberOfRequiredParameters()
+                || $argCount >
+                $reflectionConstructor->getNumberOfParameters()
+            ) {
                 $this->throwInstantiationError($className, $argCount);
             }
             return $classObject->newInstanceArgs($constructorArguments);
@@ -73,10 +85,17 @@ class PhpSlim_StatementExecutor
     public function instance($instanceName)
     {
         if (empty($this->_instances[$instanceName])) {
+            return null;
+        }
+        return $this->_instances[$instanceName];
+    }
+
+    private function raiseExceptionIfInstanceUnknown($instanceName)
+    {
+        if (empty($this->_instances[$instanceName])) {
             $message = "NO_INSTANCE $instanceName.";
             throw new PhpSlim_SlimError_Message($message);
         }
-        return $this->_instances[$instanceName];
     }
 
     public function call($instanceName, $methodName, $args = array())
@@ -84,15 +103,7 @@ class PhpSlim_StatementExecutor
         $methodName = $this->slimToPhpMethod($methodName);
         try {
             $args = (array) $args;
-            $instance = $this->instance($instanceName);
-            $callback = array($instance, $methodName);
-            if (!is_callable($callback)) {
-                $message = sprintf(
-                    "NO_METHOD_IN_CLASS %s[%d] %s.",
-                    $methodName, count($args), get_class($instance)
-                );
-                throw new PhpSlim_SlimError_Message($message);
-            }
+            $callback = $this->getCallback($instanceName, $methodName, $args);
             $args = $this->replaceSymbols($args);
             set_error_handler(array($this, 'exceptionErrorHandler'));
             $result = call_user_func_array($callback, $args);
@@ -103,6 +114,71 @@ class PhpSlim_StatementExecutor
         } catch (Exception $e) {
             return $this->exceptionToString($e);
         }
+    }
+
+    private function getCallback($instanceName, $methodName, $args)
+    {
+        $instance = $this->instance($instanceName);
+        $callback = array($instance, $methodName);
+        if (!is_callable($callback) && !is_null($instance)) {
+            $callback = $this->getCallbackFromSystemUnderTest(
+                $instance, $methodName
+            );
+        }
+        if (!is_callable($callback)) {
+            $callback = $this->getCallbackFromLibrary($methodName);
+        }
+        if (is_callable($callback)) {
+            return $callback;
+        }
+
+        $this->raiseExceptionIfInstanceUnknown($instanceName);
+        $this->raiseNoMethodException($methodName, count($args), $instance);
+    }
+
+    private function raiseNoMethodException($methodName, $argCount, $instance)
+    {
+        $message = sprintf(
+            "NO_METHOD_IN_CLASS %s[%d] %s.",
+            $methodName, $argCount, get_class($instance)
+        );
+        throw new PhpSlim_SlimError_Message($message);
+    }
+
+    private function getCallbackFromLibrary($methodName)
+    {
+        foreach (array_reverse($this->_libraries) as $instance) {
+            $callback = array($instance, $methodName);
+            if (is_callable($callback)) {
+                return $callback;
+            }
+        }
+    }
+
+    private function getCallbackFromSystemUnderTest($instance, $methodName)
+    {
+        return array(
+            $this->getSystemUnderTestFromInstance($instance), $methodName
+        );
+    }
+
+    private function getSystemUnderTestFromInstance($instance)
+    {
+        $reflectionClass = new ReflectionClass($instance);
+        $filter = ReflectionProperty::IS_PUBLIC;
+        foreach ($reflectionClass->getProperties($filter) as $property) {
+            if ($this->isSystemUnderTestProperty($property)) {
+                return $property->getValue($instance);
+            }
+        }
+    }
+
+    private function isSystemUnderTestProperty(ReflectionProperty $property)
+    {
+        if ($property->getName() == 'systemUnderTest') {
+            return true;
+        }
+        return false !== strpos($property->getDocComment(), '@SystemUnderTest');
     }
 
     public function exceptionErrorHandler($errno, $errstr, $errfile, $errline)

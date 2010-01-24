@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="PhpSlim" default="build" basedir="..">
+<project name="PhpSlim" default="test" basedir="..">
     <property name="log" location="build/log"/>
     <property name="gitProject" value="git@github.com:ggramlich/phpslim.git" />
     <property name="gitBase" value="git@github.com:ggramlich/ggramlich.github.com.git" />
@@ -91,7 +91,7 @@
     <target name="phpunit">
         <mkdir dir="${log}"/>
         <exec executable="phpunit" dir="" failonerror="true">
-            <arg line="--log-xml ${log}/PhpSlim_phpunit.xml
+            <arg line="--log-junit ${log}/PhpSlim_phpunit.xml
                 PhpSlim_Tests_AllTests PhpSlim/Tests/AllTests.php" />
         </exec>
     </target>
