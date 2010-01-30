@@ -89,7 +89,19 @@ class PhpSlim_Tests_TypeConverterTest extends PhpSlim_Tests_TestCase
         $pairs = PhpSlim_TypeConverter::objectToPairs($object);
         $this->assertSame($expected, $pairs);
     }
-    
+
+    public function testHtmlTableToHash()
+    {
+        // More tests are in PhpHashWidgetConversionTest.java
+        $this->assertHtmlTableConvertsToHash(array(), '');
+
+        $html = "<table>" .
+            "<tr>  <td>name</td>  <td>Bob</td> </tr>" .
+            "<tr>  <td>address</td>  <td>here</td> </tr>" .
+            "</table>";
+        $expected = array("name" => "Bob", "address" => "here");
+        $this->assertHtmlTableConvertsToHash($expected, $html);
+    }
 
     private function assertFloatConvertsTo($expected, $value)
     {
@@ -101,6 +113,12 @@ class PhpSlim_Tests_TypeConverterTest extends PhpSlim_Tests_TestCase
     {
         $pairs = PhpSlim_TypeConverter::hashToPairs($hash);
         $this->assertSame($expected, $pairs);
+    }
+
+    private function assertHtmlTableConvertsToHash(array $expected, $html)
+    {
+        $hash = PhpSlim_TypeConverter::htmlTableToHash($html);
+        $this->assertEquals($expected, $hash);
     }
 }
 

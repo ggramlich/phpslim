@@ -59,6 +59,10 @@ class PhpSlim_StatementExecutor
             ) {
                 $this->throwInstantiationError($className, $argCount);
             }
+            $constructorArguments = $this->convertHashTables(
+                $constructorArguments,
+                $reflectionConstructor->getParameters()
+            );
             return $classObject->newInstanceArgs($constructorArguments);
         } catch (PhpSlim_SlimError_Instantiation $e) {
             $this->throwInstantiationError($className, $argCount, $e);
@@ -104,9 +108,11 @@ class PhpSlim_StatementExecutor
         try {
             $args = (array) $args;
             $callback = $this->getCallback($instanceName, $methodName, $args);
+            $method = $this->convertCallbackToReflectionMethod($callback);
             $args = $this->replaceSymbols($args);
+            $args = $this->convertHashTables($args, $method->getParameters());
             set_error_handler(array($this, 'exceptionErrorHandler'));
-            $result = call_user_func_array($callback, $args);
+            $result = $method->invokeArgs($callback[0], $args);
             restore_error_handler();
             return $result;
         } catch (PhpSlim_SlimError $e) {
@@ -114,6 +120,23 @@ class PhpSlim_StatementExecutor
         } catch (Exception $e) {
             return $this->exceptionToString($e);
         }
+    }
+
+    private function convertCallbackToReflectionMethod($callback)
+    {
+        assert(is_array($callback) && is_callable($callback));
+        $reflectionObject = new ReflectionObject($callback[0]);
+        return $reflectionObject->getMethod($callback[1]);
+    }
+
+    private function convertHashTables($args, $parameters)
+    {
+        foreach ($args as $key => $value) {
+            if (isset($parameters[$key]) && $parameters[$key]->isArray()) {
+                $args[$key] = PhpSlim_TypeConverter::htmlTableToHash($value);
+            }
+        }
+        return $args;
     }
 
     private function getCallback($instanceName, $methodName, $args)

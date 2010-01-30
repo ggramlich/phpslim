@@ -50,7 +50,7 @@ class PhpSlim_TypeConverter
         }
         return sprintf($format, implode($glue, $array));
     }
-    
+
     public static function inspectArrayNoQuotes($array)
     {
         return self::inspectArray($array, false);
@@ -90,7 +90,7 @@ class PhpSlim_TypeConverter
             throw new PhpSlim_SlimError_Message('List did not end with ]');
         }
     }
-    
+
     private static function isNumericArray($array)
     {
         if (!is_array($array)) {
@@ -103,7 +103,7 @@ class PhpSlim_TypeConverter
         }
         return true;
     }
-    
+
     private static function isBoolArray($array)
     {
         if (!is_array($array)) {
@@ -136,7 +136,7 @@ class PhpSlim_TypeConverter
     {
         return $value ? 'true' : 'false';
     }
-    
+
     public static function toBool($string)
     {
         if (is_numeric($string)) {
@@ -168,5 +168,57 @@ class PhpSlim_TypeConverter
     public static function objectToPairs($object)
     {
         return self::hashToPairs(get_object_vars($object));
+    }
+
+    public static function htmlTableToHash($html)
+    {
+        try {
+            $doc = new DOMDocument();
+            $doc->loadHTML($html);
+            $doc->normalizeDocument();
+            return self::domDocTableToHash($doc);
+        } catch (Exception $e) {
+            return array();
+        }
+    }
+
+    private static function domDocTableToHash(DOMDocument $doc)
+    {
+        $hash = array();
+        if (1 != $doc->getElementsByTagName('table')->length) {
+            return array();
+        }
+        $table = $doc->getElementsByTagName('table')->item(0);
+        for ($i = 0; $i < $table->childNodes->length; $i ++) {
+            $row = $table->childNodes->item($i);
+            $entry = self::getEntryFromRow($row);
+            if (is_null($entry)) {
+                return array();
+            }
+            list($key, $value) = $entry;
+            $hash[$key] = $value;
+        }
+        return $hash;
+    }
+
+    private static function getEntryFromRow(DOMNode $row)
+    {
+        if ($row->nodeName != 'tr') {
+            return;
+        }
+        $entry = array();
+        for ($i = 0; $i < $row->childNodes->length; $i ++) {
+            $element = $row->childNodes->item($i);
+            if ($element->nodeType === XML_ELEMENT_NODE) {
+                if ($element->nodeName != 'td') {
+                    return;
+                }
+                $entry[] = $element->nodeValue;
+            }
+        }
+        if (2 != count($entry)) {
+            return;
+        }
+        return $entry;
     }
 }

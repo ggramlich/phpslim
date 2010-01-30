@@ -472,6 +472,10 @@ class PhpSlim_StatementExecutor
             ) {
                 $this->throwInstantiationError($className, $argCount);
             }
+            $constructorArguments = $this->convertHashTables(
+                $constructorArguments,
+                $reflectionConstructor->getParameters()
+            );
             return $classObject->newInstanceArgs($constructorArguments);
         } catch (PhpSlim_SlimError_Instantiation $e) {
             $this->throwInstantiationError($className, $argCount, $e);
@@ -517,9 +521,11 @@ class PhpSlim_StatementExecutor
         try {
             $args = (array) $args;
             $callback = $this->getCallback($instanceName, $methodName, $args);
+            $method = $this->convertCallbackToReflectionMethod($callback);
             $args = $this->replaceSymbols($args);
+            $args = $this->convertHashTables($args, $method->getParameters());
             set_error_handler(array($this, 'exceptionErrorHandler'));
-            $result = call_user_func_array($callback, $args);
+            $result = $method->invokeArgs($callback[0], $args);
             restore_error_handler();
             return $result;
         } catch (PhpSlim_SlimError $e) {
@@ -527,6 +533,23 @@ class PhpSlim_StatementExecutor
         } catch (Exception $e) {
             return $this->exceptionToString($e);
         }
+    }
+
+    private function convertCallbackToReflectionMethod($callback)
+    {
+        assert(is_array($callback) && is_callable($callback));
+        $reflectionObject = new ReflectionObject($callback[0]);
+        return $reflectionObject->getMethod($callback[1]);
+    }
+
+    private function convertHashTables($args, $parameters)
+    {
+        foreach ($args as $key => $value) {
+            if (isset($parameters[$key]) && $parameters[$key]->isArray()) {
+                $args[$key] = PhpSlim_TypeConverter::htmlTableToHash($value);
+            }
+        }
+        return $args;
     }
 
     private function getCallback($instanceName, $methodName, $args)
@@ -828,7 +851,7 @@ class PhpSlim_TypeConverter
         }
         return sprintf($format, implode($glue, $array));
     }
-    
+
     public static function inspectArrayNoQuotes($array)
     {
         return self::inspectArray($array, false);
@@ -868,7 +891,7 @@ class PhpSlim_TypeConverter
             throw new PhpSlim_SlimError_Message('List did not end with ]');
         }
     }
-    
+
     private static function isNumericArray($array)
     {
         if (!is_array($array)) {
@@ -881,7 +904,7 @@ class PhpSlim_TypeConverter
         }
         return true;
     }
-    
+
     private static function isBoolArray($array)
     {
         if (!is_array($array)) {
@@ -914,7 +937,7 @@ class PhpSlim_TypeConverter
     {
         return $value ? 'true' : 'false';
     }
-    
+
     public static function toBool($string)
     {
         if (is_numeric($string)) {
@@ -946,6 +969,58 @@ class PhpSlim_TypeConverter
     public static function objectToPairs($object)
     {
         return self::hashToPairs(get_object_vars($object));
+    }
+
+    public static function htmlTableToHash($html)
+    {
+        try {
+            $doc = new DOMDocument();
+            $doc->loadHTML($html);
+            $doc->normalizeDocument();
+            return self::domDocTableToHash($doc);
+        } catch (Exception $e) {
+            return array();
+        }
+    }
+
+    private static function domDocTableToHash(DOMDocument $doc)
+    {
+        $hash = array();
+        if (1 != $doc->getElementsByTagName('table')->length) {
+            return array();
+        }
+        $table = $doc->getElementsByTagName('table')->item(0);
+        for ($i = 0; $i < $table->childNodes->length; $i ++) {
+            $row = $table->childNodes->item($i);
+            $entry = self::getEntryFromRow($row);
+            if (is_null($entry)) {
+                return array();
+            }
+            list($key, $value) = $entry;
+            $hash[$key] = $value;
+        }
+        return $hash;
+    }
+
+    private static function getEntryFromRow(DOMNode $row)
+    {
+        if ($row->nodeName != 'tr') {
+            return;
+        }
+        $entry = array();
+        for ($i = 0; $i < $row->childNodes->length; $i ++) {
+            $element = $row->childNodes->item($i);
+            if ($element->nodeType === XML_ELEMENT_NODE) {
+                if ($element->nodeName != 'td') {
+                    return;
+                }
+                $entry[] = $element->nodeValue;
+            }
+        }
+        if (2 != count($entry)) {
+            return;
+        }
+        return $entry;
     }
 }
 
