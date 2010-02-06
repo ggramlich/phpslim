@@ -1,8 +1,5 @@
 # Ignore svn directories
 .svn
-.buildpath
-.project
-.settings
 VMBridge.log
 bin
 PhpSlim/build/PEAR
@@ -11,3 +8,5 @@ classes
 dist
 test-results
 .tmp*
+*~
+
