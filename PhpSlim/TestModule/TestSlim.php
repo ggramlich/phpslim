@@ -89,7 +89,7 @@ class TestModule_TestSlim
     public function setBooleanArray($array)
     {
         $array = PhpSlim_TypeConverter::listToArray($array);
-        $callback = array('PhpSlim_TypeConverter', toBool);
+        $callback = array('PhpSlim_TypeConverter', 'toBool');
         $this->_booleanArray = array_map($callback, $array);
     }
 
