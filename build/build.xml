@@ -92,7 +92,7 @@
   </target>
 
 
-  <target name="compile" depends="init" description="compile the source (make)">
+  <target name="compile" depends="init, build-fitnesse" description="compile the source (make)">
     <javac srcdir="src" destdir="classes" classpathref="classpath" debug="true">
     </javac>
   </target>
@@ -120,6 +120,19 @@
     <mkdir dir="classes"/>
     <mkdir dir="test-results"/>
   </target>
+
+    <target name="build-fitnesse">
+        <!--
+            ant and subant tasks do not work,
+            they stops with an error on createUpdateList
+        -->
+        <exec executable="ant" dir="../fitnesse">
+            <arg value="jar"/>
+        </exec>
+        <copy todir="lib">
+            <fileset dir="../fitnesse/dist" />
+        </copy>
+    </target>
 
   <target name="release" depends="testbuild, jar"/>
 </project>
