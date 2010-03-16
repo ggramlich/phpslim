@@ -737,7 +737,7 @@ class PhpSlim_SymbolRepository
             $value = 'null';
         }
         $this->_symbols[$name] = $value;
-        // Sort it reverse, so for non-prefix-free symbol combinations 
+        // Sort it reverse, so for non-prefix-free symbol combinations
         // the longest symbol is replaced first
         krsort($this->_symbols);
     }
@@ -773,7 +773,9 @@ class PhpSlim_SymbolRepository
             return $item;
         }
         if ($this->itemIsSymbol($item)) {
-            // Single symbol, don't replace within string, can return object
+            // If the item is a single symbol, then do not
+            // replace it with str_replace, so the stored
+            // replacement can also be an object
             return $this->getSymbol(mb_substr($item, 1));
         }
         $symbolKeys = array_keys($this->_symbols);
