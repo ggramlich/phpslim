@@ -28,7 +28,7 @@ class PhpSlim_Server
 
     private function serveSlim()
     {
-        $this->_socket->write("Slim -- V0.0\n");
+        $this->_socket->write("Slim -- V0.1\n");
         while (true) {
             $command = $this->readCommand();
             if (strtolower($command) == 'bye') {
