@@ -11,8 +11,6 @@ main_pages:
    sub_pages: 
      - name: Installation
        page: installation.html
-     - name: First Steps
-       page: first_steps.html
      - name: First Test
        page: first_test.html
 

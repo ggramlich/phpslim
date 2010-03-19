@@ -8,10 +8,14 @@ Getting Started
 ---------------
 
 Take the tour through [Installation](installation.html), 
-[First Steps](first_steps.html) and the [First Test](first_test.html).
+and the [First Test](first_test.html).
 
 Video Tutorials
 ---------------
+
+**The video tutorials will soon be updated.**
+
+**The videos here describe the deprecated installation using PEAR.**
 
 These tutorials are now available as screencasts on
 [my vimeo page](http://vimeo.com/ggramlich).

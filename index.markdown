@@ -15,3 +15,6 @@ references on this site.
 
 Please take a look at the [Tutorials](tutorials.html).
 
+**Note:** The installation method using the PEAR installer is deprecated
+as of March 2010.
+

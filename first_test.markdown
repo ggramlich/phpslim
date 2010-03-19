@@ -8,7 +8,7 @@ The first wiki page
 -------------------
 
 After having started the FitNesse server in the 
-[First Steps](first_steps.html),
+[Installation](installation.html),
 create your first wiki page by browsing to a non-existing page
 <http://localhost:8070/MyFirstSlimTest>.
 
@@ -22,8 +22,7 @@ Overwrite the `!contents -R2 -g -p -f -h` with
 
 and click on `Save`. We just created our first specification (or test) with a
 [Decision Table][].
-Since the page name
-MyFirstSlimTest ended with Test,
+Since the page name MyFirstSlimTest ends with Test,
 [FitNesse automatically provides the `Test` button][PageProperties].
 Click on it now.
 
@@ -45,8 +44,9 @@ Let's write some code
 
 First create a `Slim` sub directory in your project directory.
 
-> Do you remember the `!path /path/to/project/Slim`
-> setting in the `root` page?.
+> Do you remember the `-i /path/to/project/Slim`, 
+> resp. `-i ${FITNESSE_ROOTPATH}/Slim`
+> setting in the `root` page?
 
 Then create a file `MyFixture.php` for the PHP class
 in that `Slim` directory and fill it with
