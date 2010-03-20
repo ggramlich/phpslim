@@ -1,0 +1,22 @@
+<project name="BuildFitNesseDependency" basedir="..">
+    <property name="fitnesse.jarfile" value="../fitnesse/dist/fitnesse.jar" />
+    <property name="libdir" value="lib"/>
+
+    <target name="get-fitnesse-jar" unless="fitnesse.do-not-copyover" >
+        <antcall target="build-fitnesse-jar"></antcall>
+        <copy todir="${libdir}">
+            <fileset file="${fitnesse.jarfile}" />
+        </copy>
+    </target>
+
+    <target name="build-fitnesse-jar" unless="fitnesse.do-not-build">
+        <!--
+            ant and subant tasks do not work,
+            they stops with an error on createUpdateList
+        -->
+        <exec executable="ant" dir="../fitnesse">
+            <arg value="jar"/>
+        </exec>
+    </target>
+
+</project>

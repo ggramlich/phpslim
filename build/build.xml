@@ -3,6 +3,9 @@
     PhpSlim Java bridge.
   </description>
 
+    <import file="fitnesse-build.xml" />
+    <property name="libdir" value="lib"/>
+
   <path id="classpath">
     <pathelement path="classes"/>
     <fileset dir="lib">
@@ -78,7 +81,7 @@
       <include name="slim/phplib/getPhpSlimProxy.php" />
       <zipfileset src="lib/JavaBridge.jar" />
       <zipfileset src="lib/php-script.jar" />
-      <zipfileset src="lib/fitnesse.jar">
+      <zipfileset src="${libdir}/fitnesse.jar">
         <exclude name = "**/*TestBase.class"/>
         <include name="fitnesse/slim/*.class"/>
         <include name="fitnesse/socketservice/*.class"/>
@@ -92,7 +95,7 @@
   </target>
 
 
-  <target name="compile" depends="init, build-fitnesse" description="compile the source (make)">
+  <target name="compile" depends="init, get-fitnesse-jar" description="compile the source (make)">
     <javac srcdir="src" destdir="classes" classpathref="classpath" debug="true">
     </javac>
   </target>
@@ -120,19 +123,6 @@
     <mkdir dir="classes"/>
     <mkdir dir="test-results"/>
   </target>
-
-    <target name="build-fitnesse">
-        <!--
-            ant and subant tasks do not work,
-            they stops with an error on createUpdateList
-        -->
-        <exec executable="ant" dir="../fitnesse">
-            <arg value="jar"/>
-        </exec>
-        <copy todir="lib">
-            <fileset dir="../fitnesse/dist" />
-        </copy>
-    </target>
 
   <target name="release" depends="testbuild, jar"/>
 </project>
