@@ -28,7 +28,7 @@ class PhpSlim_Server
 
     private function serveSlim()
     {
-        $this->_socket->write("Slim -- V0.0\n");
+        $this->_socket->write("Slim -- V0.1\n");
         while (true) {
             $command = $this->readCommand();
             if (strtolower($command) == 'bye') {
@@ -49,11 +49,11 @@ class PhpSlim_Server
 
     /**
      * Workaround to read $length many characters
-     * 
+     *
      * This method is deprecated, since
      * http://github.com/unclebob/fitnesse/commit/
      * d20ad095d7e9fc62eb8eca614fd2a81a7f8643e2
-     * 
+     *
      * @deprecated
      */
     private function readMultibytes($length)

@@ -1,6 +1,6 @@
 <?php
 if (!class_exists('PhpSlim_AutoLoader', false)) {
-    require_once 'PhpSlim/AutoLoader.php';
+    require_once dirname(__FILE__) . '/PhpSlim/AutoLoader.php';
 }
 
 class PhpSlim

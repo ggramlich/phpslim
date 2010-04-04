@@ -16,6 +16,11 @@ class PhpSlim_AutoLoader
      */
     private $_loadedClasses = array();
 
+    /**
+     * @var string
+     */
+    private static $_pharArchive = null;
+
     protected function __construct()
     {
     }
@@ -80,7 +85,8 @@ class PhpSlim_AutoLoader
     protected function ensureIncludePath()
     {
         // check, if my own class definition is loadable
-        $path = $this->getPath(__CLASS__) . '.php';
+        $this->prepareForPharArchive();
+        $path = self::getPath(__CLASS__) . '.php';
         if (false === self::getIncludableFile($path)) {
             $basePath = realpath(dirname(__FILE__) . '/..');
             $newPath = get_include_path() . PATH_SEPARATOR . $basePath;
@@ -94,6 +100,19 @@ class PhpSlim_AutoLoader
         if (false === self::getIncludableFile($path)) {
             throw new Exception('Cannot set include path');
         }
+    }
+
+    private function prepareForPharArchive()
+    {
+        if (substr(__FILE__, 0, 7) != 'phar://') {
+            return;
+        }
+        $pharFile = substr(__FILE__, 7);
+        $end = strpos($pharFile, '/');
+        if (false === $end) {
+            return;
+        }
+        self::$_pharArchive = substr($pharFile, 0, $end);
     }
 
     /**
@@ -162,6 +181,13 @@ class PhpSlim_AutoLoader
      */
     private static function getIncludableFile($file)
     {
+        if (self::$_pharArchive) {
+            $pharPath = 'phar://' . self::$_pharArchive . '/' . $file;
+            if (file_exists($pharPath)) {
+                return $pharPath;
+            }
+        }
+
         if (file_exists($file)) {
             return realpath($file);
         }

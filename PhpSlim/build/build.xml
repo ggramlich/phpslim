@@ -4,9 +4,17 @@
     <property name="gitProject" value="git@github.com:ggramlich/phpslim.git" />
     <property name="gitBase" value="git@github.com:ggramlich/ggramlich.github.com.git" />
 
-    <target name="build" depends="test,makePear">
+    <target name="build" depends="test">
     </target>
 
+    <target name="phar" depends="build" description="generate the phar file">
+        <mkdir dir="../dist"/>
+        <delete file="../dist/phpslim.phar"/>
+        <exec executable="php" dir="build" failonerror="true">
+            <arg line="pharPackage.php" />
+        </exec>
+    </target>
+    
     <target name="syncGit" depends="clean">
         <delete dir="../git/phpslim" />
         <mkdir dir="../git"/>
@@ -23,7 +31,7 @@
         <delete dir="build/PEAR" />
     </target>
 
-    <target name="makePear" depends="setChannelUrl">
+    <target name="makePear" depends="build,setChannelUrl">
         <delete dir="build/PEAR" />
         <mkdir dir="build/PEAR"/>
         <exec executable="php" dir="build" failonerror="true">
@@ -79,7 +87,7 @@
         <echo message="Channel ${channelurl}" />
     </target>
 
-    <target name="test" depends="phpunit,phplint,phpcs,stricttests">
+    <target name="test" depends="phpunit,phpcs,stricttests">
     </target>
 
     <target name="phpcs">

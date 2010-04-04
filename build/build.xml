@@ -64,6 +64,11 @@
     <delete dir="lib/tmp" />
   </target>
 
+
+  <target name="phar">
+    <ant target="phar" antfile="build/build.xml" dir="PhpSlim" />
+  </target>
+
   <target name="jar" depends="build" description="generate the jar file">
     <mkdir dir="dist"/>
     <delete file="dist/phpslim.jar"/>
@@ -124,5 +129,5 @@
     <mkdir dir="test-results"/>
   </target>
 
-  <target name="release" depends="testbuild, jar"/>
+  <target name="release" depends="testbuild, jar, phar"/>
 </project>
