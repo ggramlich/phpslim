@@ -9,14 +9,14 @@ Requirements
 
 You do **not** need a webserver like Apache.
 
-- PHP version &ge; 5.1.2, CGI access
-- Java &ge; 6 for FitNesse and PhpSlim
+- PHP version &ge; 5.1.2, CLI access
+- Java &ge; 6 for FitNesse
 
 Install PhpSlim
 ------------
 
 All you need to do is download the
-[phpslim.jar](http://github.com/downloads/ggramlich/phpslim/phpslim.jar)
+[phpslim.phar](http://github.com/downloads/ggramlich/phpslim/phpslim.phar)
 and put it into some directory either in your project or into
 a central path like `/opt`.
 
@@ -69,7 +69,7 @@ You should now see the output
     ................................................................................
     ...
     ................................................................................
-    FitNesse (v20100317) Started...
+    FitNesse (v20100403) Started...
         port:              8070
         root page:         fitnesse.wiki.FileSystemPage at /path/to/project/FitNesseRoot
         logger:            none
@@ -88,7 +88,7 @@ The `FitNesseRoot` directory is the place, where the wiki pages for our
 tests will be stored.
 
 Now direct your browser to <http://localhost:8070> and you will see 
-your local version of the FitNesse FrontPage (in frames).
+your local version of the FitNesse FrontPage.
 
 Tell FitNesse about PhpSlim
 ---------------------------
@@ -99,20 +99,24 @@ The appropriate place to tell FitNesse, how to
 call up PhpSlim is <http://localhost:8070/root>. This page
 is always parsed, when you run a test.
 Open this root page in your browser and click on `Edit`.
-Assuming that you saved `phpslim.jar` to `/opt/phpslim.jar`,
+Assuming that you saved `phpslim.phar` to `/opt/phpslim.phar`,
 enter the following in the editor text area.
 
-    !define TEST_RUNNER {slim.PhpSlimService}
-    !define COMMAND_PATTERN (java -cp /opt/phpslim.jar %m -i /path/to/project/Slim)
-    !define TEST_SYSTEM {slim}
+    !define TEST_RUNNER (/opt/phpslim.phar)
+    !define COMMAND_PATTERN (php %m /path/to/project/Slim)
+    !define TEST_SYSTEM (slim)
 
-You need to replace `/path/to/project` with your actual path. The -i parameter 
+You need to replace `/path/to/project` with your actual path. The %m is 
+replaced by the TEST_RUNNER and the parameter after %m
 defines the php include path.
 
-If you saved `phpslim.jar` into `/path/to/project/phpslim.jar` you can
-define the COMMAND_PATTERN relative to FITNESSE_ROOTPATH.
+If you saved `phpslim.phar` into `/path/to/project/phpslim.phar` you can
+define the TEST_RUNNER relative to FITNESSE_ROOTPATH. You can also
+define the include path relative to FITNESSE_ROOTPATH.
 
-    !define COMMAND_PATTERN (java -cp ${FITNESSE_ROOTPATH}/phpslim.jar %m -i ${FITNESSE_ROOTPATH}/Slim)
+    !define TEST_RUNNER (${FITNESSE_ROOTPATH}/phpslim.phar)
+    !define COMMAND_PATTERN (php %m ${FITNESSE_ROOTPATH}/Slim)
+    !define TEST_SYSTEM (slim)
 
 These settings are described on the 
 [CustomizingTestExecution](http://fitnesse.org/FitNesse.UserGuide.CustomizingTestExecution)

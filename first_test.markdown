@@ -44,9 +44,9 @@ Let's write some code
 
 First create a `Slim` sub directory in your project directory.
 
-> Do you remember the `-i /path/to/project/Slim`, 
-> resp. `-i ${FITNESSE_ROOTPATH}/Slim`
-> setting in the `root` page?
+> Do you remember the `/path/to/project/Slim`, 
+> resp. `${FITNESSE_ROOTPATH}/Slim`
+> include path setting in the `root` page?
 
 Then create a file `MyFixture.php` for the PHP class
 in that `Slim` directory and fill it with
