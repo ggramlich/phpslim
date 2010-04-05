@@ -10,6 +10,9 @@ class PhpSlim
 
     public static function main($arguments)
     {
+        if (!function_exists('socket_create')) {
+            die(self::getSocketsAdvice());
+        }
         if (count($arguments) < 3) {
             die(self::getHelp());
         }
@@ -30,6 +33,12 @@ class PhpSlim
     {
         return "The runPhpSlim script must be started from FitNesse "
             . "with parameters include_path port.\n";
+    }
+
+    private static function getSocketsAdvice()
+    {
+        return "The php_sockets module is not enabled. Please make sure that"
+            . "you have extension=php_sockets.dll in you php.ini.\n";
     }
 
     public static function tagErrorMessage($message)
