@@ -1,6 +1,8 @@
 <?php
 class PhpSlim_AutoLoader
 {
+    const PHAR_SUFFIX = '.phar/';
+
     /**
      * @var PhpSlim_AutoLoader
      */
@@ -108,11 +110,12 @@ class PhpSlim_AutoLoader
             return;
         }
         $pharFile = substr(__FILE__, 7);
-        $end = strpos($pharFile, '/');
+        $end = strpos($pharFile, self::PHAR_SUFFIX);
         if (false === $end) {
             return;
         }
-        self::$_pharArchive = substr($pharFile, 0, $end);
+        $pharPath = substr($pharFile, 0, $end);
+        self::$_pharArchive = 'phar://' . $pharPath . self::PHAR_SUFFIX;
     }
 
     /**
@@ -182,7 +185,7 @@ class PhpSlim_AutoLoader
     private static function getIncludableFile($file)
     {
         if (self::$_pharArchive) {
-            $pharPath = 'phar://' . self::$_pharArchive . '/' . $file;
+            $pharPath = self::$_pharArchive . $file;
             if (file_exists($pharPath)) {
                 return $pharPath;
             }
