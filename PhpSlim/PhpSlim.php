@@ -37,8 +37,16 @@ class PhpSlim
 
     private static function getSocketsAdvice()
     {
-        return "The php_sockets module is not enabled. Please make sure that"
-            . "you have extension=php_sockets.dll in you php.ini.\n";
+        $message = "The php_sockets module is not enabled. "
+            . "Please make sure that you have extension=php_sockets.dll "
+            . "in your php.ini.\n";
+        if (false === php_ini_loaded_file()) {
+            $message .= "You have no php.ini file defined!";
+        } else {
+            $message .= "Your php.ini file is located at "
+                . php_ini_loaded_file();
+        }
+        return $message . "\n\n";
     }
 
     public static function tagErrorMessage($message)
