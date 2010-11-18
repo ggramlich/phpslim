@@ -1,13 +1,26 @@
 <?php
-require_once 'PHP/Archive/Creator.php';
+class CodeFilterIterator extends FilterIterator
+{
+    public function accept()
+    {
+        $path = $this->getInnerIterator()->current()->getPath();
+        return (preg_match('([/\\\\](Tests|Java)[/\\\\])', $path) === 0);
+    }
+}
 
-$creator = new PHP_Archive_Creator('runPhpSlim.php', 'phpslim.phar', 'gz');
+$mainDir  = realpath(dirname(__FILE__) . '/..');
+$pharFile = realpath($mainDir . '/../dist') . '/phpslim.phar';
 
-$mainDir = realpath(dirname(__FILE__) . '/..');
-$pharFile = $mainDir . '/../dist/phpslim.phar';
-$creator->addFile($mainDir . '/PhpSlim.php', 'PhpSlim.php');
-$creator->addFile($mainDir . '/runPhpSlim.php', 'runPhpSlim.php');
-$creator->addDir($mainDir . '/PhpSlim', array('**/Tests/**', '**/Java/**'), array(), false, $mainDir);
-$creator->useMD5Signature();
+$files = new CodeFilterIterator(
+    new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($mainDir . '/PhpSlim')
+    )
+);
 
-$creator->savePhar($pharFile);
+$phar = new Phar($pharFile, 0, 'phpslim.phar');
+$phar->buildFromIterator($files, $mainDir);
+$phar->addFile($mainDir . '/PhpSlim.php', 'PhpSlim.php');
+$phar->addFile($mainDir . '/runPhpSlim.php', 'index.php');
+$phar->setDefaultStub('index.php', 'index.php');
+$phar->compressFiles(Phar::GZ);
+$phar->setSignatureAlgorithm(Phar::SHA1);

@@ -4,13 +4,21 @@
     <property name="gitProject" value="git@github.com:ggramlich/phpslim.git" />
     <property name="gitBase" value="git@github.com:ggramlich/ggramlich.github.com.git" />
 
+    <property name="distdir" value="${basedir}/../dist" />
+
     <target name="build" depends="test">
     </target>
 
     <target name="phar" depends="build" description="generate the phar file">
-        <mkdir dir="../dist"/>
-        <delete file="../dist/phpslim.phar"/>
+        <mkdir dir="${distdir}"/>
+
+        <delete>
+            <fileset dir="${distdir}" includes="**/phpslim.*" />
+        </delete>
+
         <exec executable="php" dir="build" failonerror="true">
+            <arg line="-d" />
+            <arg line="phar.readonly=0" />
             <arg line="pharPackage.php" />
         </exec>
     </target>
