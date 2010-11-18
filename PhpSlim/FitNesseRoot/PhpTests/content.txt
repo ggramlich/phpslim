@@ -1,17 +1,13 @@
-Put these definitions into some base page under which you put your Slim tests.
+You need to configure the paths of your installation to run the PhpTests.
 
-Make sure that the following lines point to the path of your .PhpSlim installation. The runPhpSlim.php file must be in this directory.
+Please run the configure.php script from your shell.
 
-!define TEST_RUNNER {/home/manuel/workspace/phpslim/dist/phpslim.phar}
-!path /home/manuel/workspace/phpslim/PhpSlim/Examples
-
-!define TEST_SYSTEM {slim}
-!define COMMAND_PATTERN {php %m -b %p/bootstrap.php %p}
-!define PATH_SEPARATOR {:}
-
-
-Within this subwiki, you can run the test suite by hitting the [[Suite][PhpTests?suite]] button on the left.
-
-The >JunkTests and >SlimTests are not supposed to pass.
-
-!contents -R2 -g -p -f -h
+Start your shell, then change the directory to your PhpSlim installation.
+{{{
+cd /path/to/PhpSlim
+}}}
+Then type
+{{{
+php configure.php
+}}}
+The configure script will replace this page by a customized version. After that reload this page in your browser.
