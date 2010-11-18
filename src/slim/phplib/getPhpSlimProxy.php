@@ -2,7 +2,7 @@
 
 
 if (!class_exists('PhpSlim_AutoLoader', false)) {
-    require_once 'PhpSlim/AutoLoader.php';
+    require_once dirname(__FILE__) . '/PhpSlim/AutoLoader.php';
 }
 
 class PhpSlim
@@ -12,6 +12,9 @@ class PhpSlim
 
     public static function main($arguments)
     {
+        if (!function_exists('socket_create')) {
+            die(self::getSocketsAdvice());
+        }
         if (count($arguments) < 3) {
             die(self::getHelp());
         }
@@ -34,6 +37,20 @@ class PhpSlim
             . "with parameters include_path port.\n";
     }
 
+    private static function getSocketsAdvice()
+    {
+        $message = "The php_sockets module is not enabled. "
+            . "Please make sure that you have extension=php_sockets.dll "
+            . "in your php.ini.\n";
+        if (false === php_ini_loaded_file()) {
+            $message .= "You have no php.ini file defined!";
+        } else {
+            $message .= "Your php.ini file is located at "
+                . php_ini_loaded_file();
+        }
+        return $message . "\n\n";
+    }
+
     public static function tagErrorMessage($message)
     {
         return self::EXCEPTION_TAG . $message;
@@ -52,6 +69,8 @@ class PhpSlim
 
 class PhpSlim_AutoLoader
 {
+    const PHAR_SUFFIX = '.phar/';
+
     /**
      * @var PhpSlim_AutoLoader
      */
@@ -66,6 +85,11 @@ class PhpSlim_AutoLoader
      * @var array
      */
     private $_loadedClasses = array();
+
+    /**
+     * @var string
+     */
+    private static $_pharArchive = null;
 
     protected function __construct()
     {
@@ -131,7 +155,8 @@ class PhpSlim_AutoLoader
     protected function ensureIncludePath()
     {
         // check, if my own class definition is loadable
-        $path = $this->getPath(__CLASS__) . '.php';
+        $this->prepareForPharArchive();
+        $path = self::getPath(__CLASS__) . '.php';
         if (false === self::getIncludableFile($path)) {
             $basePath = realpath(dirname(__FILE__) . '/..');
             $newPath = get_include_path() . PATH_SEPARATOR . $basePath;
@@ -145,6 +170,20 @@ class PhpSlim_AutoLoader
         if (false === self::getIncludableFile($path)) {
             throw new Exception('Cannot set include path');
         }
+    }
+
+    private function prepareForPharArchive()
+    {
+        if (substr(__FILE__, 0, 7) != 'phar://') {
+            return;
+        }
+        $pharFile = substr(__FILE__, 7);
+        $end = strpos($pharFile, self::PHAR_SUFFIX);
+        if (false === $end) {
+            return;
+        }
+        $pharPath = substr($pharFile, 0, $end);
+        self::$_pharArchive = 'phar://' . $pharPath . self::PHAR_SUFFIX;
     }
 
     /**
@@ -213,6 +252,13 @@ class PhpSlim_AutoLoader
      */
     private static function getIncludableFile($file)
     {
+        if (self::$_pharArchive) {
+            $pharPath = self::$_pharArchive . $file;
+            if (file_exists($pharPath)) {
+                return $pharPath;
+            }
+        }
+
         if (file_exists($file)) {
             return realpath($file);
         }
@@ -737,7 +783,7 @@ class PhpSlim_SymbolRepository
             $value = 'null';
         }
         $this->_symbols[$name] = $value;
-        // Sort it reverse, so for non-prefix-free symbol combinations 
+        // Sort it reverse, so for non-prefix-free symbol combinations
         // the longest symbol is replaced first
         krsort($this->_symbols);
     }
@@ -773,7 +819,9 @@ class PhpSlim_SymbolRepository
             return $item;
         }
         if ($this->itemIsSymbol($item)) {
-            // Single symbol, don't replace within string, can return object
+            // If the item is a single symbol, then do not
+            // replace it with str_replace, so the stored
+            // replacement can also be an object
             return $this->getSymbol(mb_substr($item, 1));
         }
         $symbolKeys = array_keys($this->_symbols);
@@ -920,17 +968,92 @@ class PhpSlim_TypeConverter
 
     public static function floatToString($value)
     {
-        $sign = ($value < 0)? '-': '';
-        $value = abs($value);
-        $int = floor($value);
-        $fract = 10.0 * ($value - $int);
-        $percent = substr((string) $fract, 2);
-        $fract = (int)((string)$fract);
-        $lotsOfSubsequentZeros = strpos($percent, '00000000000');
-        if (false !== $lotsOfSubsequentZeros) {
-            $percent = substr($percent, 0, $lotsOfSubsequentZeros);
+        $value = sprintf('%1.16F', $value);
+        $value = self::stripTrailingNines($value);
+        $value = self::stripTrailingZeros($value);
+        if ((abs($value) < 1e-4) && (0 != $value)) {
+            return self::scientificValue($value);
         }
-        return $sign . sprintf('%01d.%01d%s', $int, $fract, $percent);
+        if ((abs($value) >= 1e7)) {
+            return self::scientificValue($value);
+        }
+        return $value;
+    }
+
+    private static function stripTrailingZeros($value)
+    {
+        if (!self::hasLotsOfZeros($value) && (!self::hasTrailingZero($value))) {
+            return $value;
+        }
+        if (!self::hasTrailingZero($value)) {
+            $value = substr($value, 0, -5);
+        }
+        while (self::hasTrailingZero($value) && (substr($value, -2) !== '.0')) {
+            $value = substr($value, 0, -1);
+        }
+        return $value;
+    }
+
+    private static function stripTrailingNines($value)
+    {
+        if (!self::hasLotsOfNines($value)) {
+            return $value;
+        }
+        if (!self::hasTrailingNine($value)) {
+            $value = substr($value, 0, -4);
+        }
+        while (self::hasTrailingNine($value)) {
+            $value = substr($value, 0, -1);
+        }
+        $precision = strlen($value) - strpos($value, '.') - 1;
+        $digit = ((float) ('1E-' . $precision));
+        if ($value > 0) {
+            $value = $value + $digit;
+        } else {
+            $value = $value - $digit;
+        }
+        return (string) $value;
+    }
+
+    private static function hasLotsOfZeros($value)
+    {
+        return false !== strpos($value, '000000000');
+    }
+
+    private static function hasTrailingZero($value)
+    {
+        return substr($value, -1) === '0';
+    }
+
+    private static function hasLotsOfNines($value)
+    {
+        return false !== strpos($value, '999999999');
+    }
+
+    private static function hasTrailingNine($value)
+    {
+        return substr($value, -1) === '9';
+    }
+
+    private static function scientificValue($value)
+    {
+        $precision = max(1, self::getScientificPrecision($value));
+        return sprintf('%.' . $precision . 'E', $value);
+    }
+
+    private static function getScientificPrecision($value)
+    {
+        $digits = substr($value, strpos($value, '.') + 1);
+        if (abs($value) < 1) {
+            while ('0' === substr($digits, 0, 1)) {
+                $digits = substr($digits, 1);
+            }
+        } else {
+            while (is_numeric(substr($digits, 0, 1))) {
+                $digits = substr($digits, 1);
+            }
+        }
+        return strlen($digits) -1;
     }
 
     public static function boolToString($value)

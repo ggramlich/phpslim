@@ -48,6 +48,16 @@ class PhpSlim_Tests_TypeConverterTest extends PhpSlim_Tests_TestCase
         $this->assertFloatConvertsTo('-33.33333', -33.33333);
     }
 
+    public function testScientificNotation()
+    {
+        $this->assertFloatConvertsTo('1.0E-5', 0.00001);
+        $this->assertFloatConvertsTo('1.234E-5', 0.00001234);
+        $this->assertFloatConvertsTo('1000000.0', 1000000);
+        $this->assertFloatConvertsTo('1.234E+23', 1234E20);
+        $this->assertFloatConvertsTo('1000000.0', 1000000);
+        $this->assertFloatConvertsTo('1.0E+7', 10000000);
+    }
+
     public function testHashToPairsEmpty()
     {
         $this->assertHashConvertsToPairs(array(), array());

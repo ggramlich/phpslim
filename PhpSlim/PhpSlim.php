@@ -1,6 +1,6 @@
 <?php
 if (!class_exists('PhpSlim_AutoLoader', false)) {
-    require_once 'PhpSlim/AutoLoader.php';
+    require_once dirname(__FILE__) . '/PhpSlim/AutoLoader.php';
 }
 
 class PhpSlim
@@ -10,6 +10,9 @@ class PhpSlim
 
     public static function main($arguments)
     {
+        if (!function_exists('socket_create')) {
+            die(self::getSocketsAdvice());
+        }
         if (count($arguments) < 3) {
             die(self::getHelp());
         }
@@ -30,6 +33,20 @@ class PhpSlim
     {
         return "The runPhpSlim script must be started from FitNesse "
             . "with parameters include_path port.\n";
+    }
+
+    private static function getSocketsAdvice()
+    {
+        $message = "The php_sockets module is not enabled. "
+            . "Please make sure that you have extension=php_sockets.dll "
+            . "in your php.ini.\n";
+        if (false === php_ini_loaded_file()) {
+            $message .= "You have no php.ini file defined!";
+        } else {
+            $message .= "Your php.ini file is located at "
+                . php_ini_loaded_file();
+        }
+        return $message . "\n\n";
     }
 
     public static function tagErrorMessage($message)

@@ -3,6 +3,9 @@
     PhpSlim Java bridge.
   </description>
 
+    <import file="fitnesse-build.xml" />
+    <property name="libdir" value="lib"/>
+
   <path id="classpath">
     <pathelement path="classes"/>
     <fileset dir="lib">
@@ -61,6 +64,11 @@
     <delete dir="lib/tmp" />
   </target>
 
+
+  <target name="phar">
+    <ant target="phar" antfile="build/build.xml" dir="PhpSlim" />
+  </target>
+
   <target name="jar" depends="build" description="generate the jar file">
     <mkdir dir="dist"/>
     <delete file="dist/phpslim.jar"/>
@@ -78,7 +86,7 @@
       <include name="slim/phplib/getPhpSlimProxy.php" />
       <zipfileset src="lib/JavaBridge.jar" />
       <zipfileset src="lib/php-script.jar" />
-      <zipfileset src="lib/fitnesse.jar">
+      <zipfileset src="${libdir}/fitnesse.jar">
         <exclude name = "**/*TestBase.class"/>
         <include name="fitnesse/slim/*.class"/>
         <include name="fitnesse/socketservice/*.class"/>
@@ -92,7 +100,7 @@
   </target>
 
 
-  <target name="compile" depends="init, build-fitnesse" description="compile the source (make)">
+  <target name="compile" depends="init, get-fitnesse-jar" description="compile the source (make)">
     <javac srcdir="src" destdir="classes" classpathref="classpath" debug="true">
     </javac>
   </target>
@@ -104,7 +112,7 @@
   </target>
 
   <target name="unit_test" depends="build" description="run the unit tests">
-    <junit forkmode="once" fork="yes" printsummary="no" haltonfailure="yes" haltonerror="yes" dir="${basedir}">
+    <junit forkmode="perTest" fork="yes" printsummary="no" haltonfailure="yes" haltonerror="yes" dir="${basedir}">
       <classpath refid="classpath"/>
       <formatter type="xml" usefile="true"/>
       <formatter type="plain" usefile="false"/>
@@ -121,18 +129,5 @@
     <mkdir dir="test-results"/>
   </target>
 
-    <target name="build-fitnesse">
-        <!--
-            ant and subant tasks do not work,
-            they stops with an error on createUpdateList
-        -->
-        <exec executable="ant" dir="../fitnesse">
-            <arg value="jar"/>
-        </exec>
-        <copy todir="lib">
-            <fileset dir="../fitnesse/dist" />
-        </copy>
-    </target>
-
-  <target name="release" depends="testbuild, jar"/>
+  <target name="release" depends="testbuild, jar, phar"/>
 </project>
