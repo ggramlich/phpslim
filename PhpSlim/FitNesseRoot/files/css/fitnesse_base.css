@@ -60,9 +60,51 @@ table {
   border-width: 1px 0px 0px 1px;
 }
 
+table.plain_text_table {
+  background: #FFFFFF;
+  margin: 5px;
+  padding: 0px;
+  border-width: 1px 1px 1px 1px;
+  border-style:dotted;
+}
+
+table.plain_text_table td {
+  border-width:0px 0px 1px 1px;
+  border-style:dotted;
+  border-color:#D0D0D0;
+  padding: 0px 6px 0px 6px;
+  margin: 0px;
+}
+
+table.plain_text_table tr {
+  margin: 1px;
+}
+
 td, th {
   border-width: 0px 1px 1px 0px;
   padding: 5px;
+}
+
+table.hash_table {
+  border: solid #777777;
+  margin: 5px;
+  padding: 0px;
+  border-width: 1px 0px 0px 1px;
+  border-style:dotted;
+}
+
+td.hash_key {
+  border-width: 0px 1px 1px 0px;
+  background: #dddddd;
+  padding: 5px;
+  font-weight: bold;
+  border-style:dotted;
+}
+
+td.hash_value {
+  border-width: 0px 1px 1px 0px;
+  padding: 5px;
+  border-style:dotted;  
 }
 
 table.confirmation-form {
@@ -76,6 +118,10 @@ td.confirmation-form, th.confirmation-form {
   border: solid 0px #C6CCB7;
   padding: 0px;
   margin: 0px;
+}
+
+td.numeric, th.numeric {
+  text-align:right;
 }
 
 h1, h2, h3, h4 {
@@ -100,16 +146,15 @@ h4 {
   font-style: italic;
 }
 
-textarea {
+textarea.oldContent {
   width: 100%;
 }
 
 textarea.pageContent {
-  font-family: monaco, 'Lucida Sans Typewriter',monospace;
+  font-family: monaco, 'Lucida Sans Typewriter', monospace;
   font-size: 12px;
   height: 100%;
-  rows: 40;
-  columns: 70;
+  width: 100%;
 }
 
 textarea.no_wrap {
@@ -129,6 +174,37 @@ img {
  Structural
 
 **********/
+
+div.popup_window {
+  visibility: hidden;
+  position: absolute;
+  top: 50px;
+  width: 600px;
+  height: 300px;
+  border: 3px outset gray;
+  z-index: 10;
+}
+
+div.popup_title {
+  position: absolute;
+  top: 0px;
+  height: 18px;
+  width: 590px;
+  background-color: #aaa;
+  border-bottom: groove gray 2px;
+  padding: 3px 5px 2px 5px;
+  font: bold 11pt sans-serif;
+}
+
+div.popup_content {
+  position: absolute;
+  top: 25px;
+  height: 265px;
+  width: 590px;
+  padding: 5px;
+  overflow: auto;
+  background-color: white;
+}
 
 div.sidebar {
   background: #D9DFC9;
@@ -150,7 +226,7 @@ div.art_niche {
   left: 0px;
   height: 90px;
   border-bottom: solid 1px #984D00;
-  background-image: url( "/files/images/FitNesseLogo.gif" );
+  background-image: url("/files/images/FitNesseLogo.gif");
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -225,7 +301,7 @@ div.virtual-wiki-properties {
 }
 
 #execution-status,
-#stop-test {
+  #stop-test {
   position: absolute;
   top: 0px;
   right: 0px;
@@ -325,7 +401,7 @@ span.page_title {
 }
 
 .code {
-  font-family: courier, 'Lucida Sans Typewriter',monospace;
+  font-family: courier, 'Lucida Sans Typewriter', monospace;
   font-size: 16px;
   color: #004000;
   font-weight: bold;
@@ -400,13 +476,13 @@ span.page_title {
 }
 
 .virtual {
-  background-image: url( "/files/images/virtualPage.jpg" );
+  background-image: url("/files/images/virtualPage.jpg");
   background-position: center top;
   background-repeat: no-repeat;
 }
 
 .imported {
-  background-image: url( "/files/images/importedPage.jpg" );
+  background-image: url("/files/images/importedPage.jpg");
   background-position: center top;
   background-repeat: no-repeat;
 }
@@ -441,6 +517,7 @@ span.page_title {
   display: block;
   height: 1.5em;
   width: 100%;
+  clear: both;
 }
 
 .alternating_row_1, .alternating_block_1 {
@@ -552,11 +629,24 @@ div.merge_old {
   text-align: center;
 }
 
+.test_name {
+  font-size: 1.5em;
+  float: left;
+}
+
+.top_of_page {
+  margin-top: .5em;
+  margin-right: 3px;
+  float: right;
+  color: #BF8660;
+  font-style: italic;
+}
+
 .test_output_name {
   margin-top: 10px;
   background-color: #DFD4A7;
-  font-size: 1.5em;
   text-indent: 1em;
+  height: 2em;
 }
 
 table.dirListing {

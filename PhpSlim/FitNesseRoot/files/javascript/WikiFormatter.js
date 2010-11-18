@@ -6,6 +6,8 @@ function WikiFormatter()
    * a chunk of text with those tables it collected formatted.
    */
   this.format = function(wikiText) {
+    this.wikificationPrevention = false;
+    
     var formatted = "";
     var currentTable = [];
     var lines = wikiText.split("\n");
@@ -36,7 +38,9 @@ function WikiFormatter()
    */
   this.formatTable = function(table) {
     var formatted = "";
-    var rows = this.splitRows(table);
+    var splitRowsResult = this.splitRows(table);
+    var rows = splitRowsResult.rows;
+    var suffixes = splitRowsResult.suffixes;
     var widths = this.calculateColumnWidths(rows);
     var row = null;
   
@@ -48,7 +52,12 @@ function WikiFormatter()
         formatted += this.rightPad(row[columnIndex], widths[rowIndex][columnIndex]) + "|";
       }
 
-      formatted += "\n";
+      formatted += suffixes[rowIndex] + "\n";
+    }
+
+    if(this.wikificationPrevention) {
+      formatted = '!|' + formatted.substr(2);
+      this.wikificationPrevention = false;
     }
 
     return formatted;
@@ -82,22 +91,31 @@ function WikiFormatter()
   }
 
   this.isTableRow = function(line) {
-    return line.indexOf('|') == 0;
+    return line.match(/^!?\|/);
   }
 
   this.splitRows = function(rows) {
     var splitRows = [];
+    var rowSuffixes = [];
 
     this.each(rows, function(row) {
-      splitRows.push(this.splitRow(row));
+      var columns = this.splitRow(row);
+      rowSuffixes.push(columns[columns.length - 1]);
+      splitRows.push(columns.slice(0, columns.length - 1));
     }, this);
 
-    return splitRows;
+    return {rows: splitRows, suffixes: rowSuffixes};
   }
 
   this.splitRow = function(row) {
     var columns = this.trim(row).split('|');
-    columns = columns.slice(1, columns.length - 1);
+
+    if(!this.wikificationPrevention && columns[0] == '!') {
+      this.wikificationPrevention = true;
+      columns[1] = '!' + columns[1]; //leave a placeholder
+    }
+
+    columns = columns.slice(1, columns.length);
 
     this.each(columns, function(column, i) {
       columns[i] = this.trim(column);

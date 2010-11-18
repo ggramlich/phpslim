@@ -3,7 +3,6 @@
   <FitNesseVersion>$response.Version</FitNesseVersion>
   <rootPath>$response.RootPath</rootPath>
   #foreach ($result in $response.Results)
-
   <result>
     <counts>
       <right>$result.Right</right>
@@ -11,13 +10,14 @@
       <ignores>$result.Ignores</ignores>
       <exceptions>$result.Exceptions</exceptions>
     </counts>
+    <runTimeInMillis>$result.RunTimeInMillis</runTimeInMillis>
     <content><![CDATA[$result.Content]]></content>
     <relativePageName>$result.RelativePageName</relativePageName>
     #if($result.Tags)
     <tags>$result.Tags</tags>
     #end
 
-    #if($result.Tables)
+    #if($result.Tables.size() > 0)
     <tables>
       #foreach($table in $result.Tables)
       <table>
@@ -73,13 +73,13 @@
   #end
 
   #if($response.FinalCounts)
-
   <finalCounts>
     <right>$response.FinalCounts.Right</right>
     <wrong>$response.FinalCounts.Wrong</wrong>
     <ignores>$response.FinalCounts.Ignores</ignores>
     <exceptions>$response.FinalCounts.Exceptions</exceptions>
   </finalCounts>
+  <totalRunTimeInMillis>$response.TotalRunTimeInMillis</totalRunTimeInMillis>
   #end
 
 </testResults>

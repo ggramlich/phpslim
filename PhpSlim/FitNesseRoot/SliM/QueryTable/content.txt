@@ -1,7 +1,7 @@
-|Query:employees hired before|10-Dec-1980|
-|employee number|first name|last name|hire date|
-|1429           |Bob       |Martin   |10-Oct-1975|
-|9924           |Bill      |Mitchell |19-Dec-1966|
+|Query:employees hired before|10-Dec-1980                     |
+|employee number             |first name|last name|hire date  |
+|1429                        |Bob       |Martin   |10-Oct-1975|
+|9924                        |Bill      |Mitchell |19-Dec-1966|
 
 The code for the fixture is: {{{
 class Examples_SlimTests_EmployeesHiredBefore

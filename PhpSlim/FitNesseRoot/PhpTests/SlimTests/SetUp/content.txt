@@ -1,2 +1,2 @@
-!|Import|
+!|import|
 |Examples.SlimTests|
