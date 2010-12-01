@@ -1,6 +1,5 @@
 <?php
 mb_internal_encoding("UTF-8");
-require_once 'PHPUnit/Framework.php';
 require_once dirname(__FILE__) . '/../../autoload.php';
 
 class PhpSlim_Tests_AllTests
