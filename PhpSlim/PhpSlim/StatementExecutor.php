@@ -18,6 +18,7 @@ class PhpSlim_StatementExecutor
         array $constructorArguments)
     {
         try {
+            $className = $this->replaceSymbolsInString($className);
             $instance = $this->constructInstance(
                 $className, $this->replaceSymbols($constructorArguments)
             );
@@ -33,6 +34,11 @@ class PhpSlim_StatementExecutor
         }
     }
 
+    private function replaceSymbolsInString($string)
+    {
+        return $this->_symbolRepository->replaceSymbolsInItem($string);
+    }
+    
     private function isLibraryName($instanceName)
     {
         $length = strlen(self::LIBRARY_PREFIX);

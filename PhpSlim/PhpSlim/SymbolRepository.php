@@ -39,7 +39,7 @@ class PhpSlim_SymbolRepository
         return $list;
     }
 
-    private function replaceSymbolsInItem($item)
+    public function replaceSymbolsInItem($item)
     {
         if (empty($item) || is_object($item)) {
             return $item;
