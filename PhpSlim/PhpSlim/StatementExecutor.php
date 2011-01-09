@@ -128,6 +128,13 @@ class PhpSlim_StatementExecutor
         }
     }
 
+    public function callAndAssign($variable, $instanceName, $methodName, $args)
+    {
+        $result = $this->call($instanceName, $methodName, $args);
+        $this->setSymbol($variable, $result);
+        return $result;
+    }
+
     private function convertCallbackToReflectionMethod($callback)
     {
         assert(is_array($callback) && is_callable($callback));

@@ -361,6 +361,19 @@ class PhpSlim_Java_StatementExecutor
         return $this->toJavaValue($result);
     }
 
+    public function callAndAssign($variable, $instanceName, $methodName, $args)
+    {
+        $args = java_cast($args, 'array');
+        $args = $this->castArrayContents($args);
+        $result = $this->_executor->callAndAssign(
+            java_cast($variable, 'string'),
+            java_cast($instanceName, 'string'),
+            java_cast($methodName, 'string'),
+            $args
+        );
+        return $this->toJavaValue($result);
+    }
+
     public function getInstance($instanceName)
     {
         $instanceName = java_cast($instanceName, 'string');
@@ -585,6 +598,13 @@ class PhpSlim_StatementExecutor
         } catch (Exception $e) {
             return $this->exceptionToString($e);
         }
+    }
+
+    public function callAndAssign($variable, $instanceName, $methodName, $args)
+    {
+        $result = $this->call($instanceName, $methodName, $args);
+        $this->setSymbol($variable, $result);
+        return $result;
     }
 
     private function convertCallbackToReflectionMethod($callback)
@@ -1165,7 +1185,8 @@ if (!class_exists('PhpSlim_AutoLoaderInJar', false)) {
 }
 PhpSlim_AutoLoaderInJar::start();
 
-java_context()->setAttribute(PHP_VAR_PROXY, java_closure(new PhpSlim_Java_Proxy()), ENGINE_SCOPE);
+$javaProxy = java_closure(new PhpSlim_Java_Proxy());
+java_context()->setAttribute(PHP_VAR_PROXY, $javaProxy, ENGINE_SCOPE);
 java_context()->call(java_closure());
 
 ////

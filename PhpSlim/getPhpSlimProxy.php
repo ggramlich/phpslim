@@ -11,7 +11,8 @@ if (!class_exists('PhpSlim_AutoLoaderInJar', false)) {
 }
 PhpSlim_AutoLoaderInJar::start();
 
-java_context()->setAttribute(PHP_VAR_PROXY, java_closure(new PhpSlim_Java_Proxy()), ENGINE_SCOPE);
+$javaProxy = java_closure(new PhpSlim_Java_Proxy());
+java_context()->setAttribute(PHP_VAR_PROXY, $javaProxy, ENGINE_SCOPE);
 java_context()->call(java_closure());
 
 //

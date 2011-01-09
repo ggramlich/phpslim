@@ -47,6 +47,19 @@ class PhpSlim_Java_StatementExecutor
         return $this->toJavaValue($result);
     }
 
+    public function callAndAssign($variable, $instanceName, $methodName, $args)
+    {
+        $args = java_cast($args, 'array');
+        $args = $this->castArrayContents($args);
+        $result = $this->_executor->callAndAssign(
+            java_cast($variable, 'string'),
+            java_cast($instanceName, 'string'),
+            java_cast($methodName, 'string'),
+            $args
+        );
+        return $this->toJavaValue($result);
+    }
+
     public function getInstance($instanceName)
     {
         $instanceName = java_cast($instanceName, 'string');

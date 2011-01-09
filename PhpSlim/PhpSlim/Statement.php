@@ -53,11 +53,9 @@ class PhpSlim_Statement
                 $this->_executor->addModule($moduleName);
                 return $this->getExecResultRow('OK');
             case 'call':
-                return $this->callMethodAtIndex(2);
+                return $this->call();
             case 'callAndAssign':
-                $result = $this->callMethodAtIndex(3);
-                $this->_executor->setSymbol($this->getWord(2), $result[1]);
-                return $result;
+                return $this->callAndAssign();
             default:
                 throw new PhpSlim_SlimError_Message(sprintf(
                     'INVALID_STATEMENT: %s.',
@@ -81,12 +79,27 @@ class PhpSlim_Statement
         return array($this->id(), $result);
     }
 
-    private function callMethodAtIndex($index)
+    private function call()
+    {
+        $callback = array($this->_executor, 'call');
+        return $this->invokeAtIndex(2, $callback, array());
+    }
+
+    private function callAndAssign()
+    {
+        $callback = array($this->_executor, 'callAndAssign');
+        return $this->invokeAtIndex(3, $callback, array($this->getWord(2)));
+    }
+
+    private function invokeAtIndex($index, $callback, $invokeArguments)
     {
         $instanceName = $this->getWord($index);
         $methodName = $this->getWord($index + 1);
         $args = $this->getArgs($index + 2);
-        $result = $this->_executor->call($instanceName, $methodName, $args);
+        array_push($invokeArguments, $instanceName);
+        array_push($invokeArguments, $methodName);
+        array_push($invokeArguments, $args);
+        $result = call_user_func_array($callback, $invokeArguments);
         return $this->getExecResultRow($result);
     }
 
