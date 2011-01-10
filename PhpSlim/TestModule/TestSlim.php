@@ -11,6 +11,7 @@ class TestModule_TestSlim
     public $doubleArray;
 
     public $intArg;
+    public $stringArg;
     public $doubleArg;
     public $charArg;
 
@@ -25,14 +26,37 @@ class TestModule_TestSlim
 
     private $_constructorArg;
 
-    public function __construct($constructorArg = 0)
+    public function __construct($constructorArg = 0, $stringArg = null)
     {
         if (!is_numeric($constructorArg)) {
             throw new Exception('Bad Argument');
         }
         $this->_constructorArg = $constructorArg;
+        $this->stringArg = $stringArg;
     }
 
+    public function toString()
+    {
+        return "TestSlim: " . $this->_constructorArg . ", " . $this->stringArg;
+    }
+
+    public function createTestSlimWithString($string)
+    {
+        $testSlim = new self;
+        $testSlim->setString($string);
+        return $testSlim;
+    }
+
+    public function isSame($other)
+    {
+        return $this === $other;
+    }
+    
+    public function getStringFromOther($other)
+    {
+        return $other->getStringArg();
+    }
+    
     public function returnConstructorArg()
     {
         return $this->_constructorArg;
@@ -51,6 +75,16 @@ class TestModule_TestSlim
     public function returnString()
     {
         return 'string';
+    }
+
+    public function setString($string)
+    {
+        $this->stringArg = $string;
+    }
+
+    public function getStringArg()
+    {
+        return $this->stringArg;
     }
 
     public function returnInt()
@@ -144,7 +178,7 @@ class TestModule_TestSlim
         }
         return PhpSlim_TypeConverter::toString($s);
     }
-    
+
     public function echoBoolean($bool)
     {
         return PhpSlim_TypeConverter::toBool($bool);
@@ -169,12 +203,12 @@ class TestModule_TestSlim
     {
         $this->value = (float) $double;
     }
-    
+
     public function oneDate($date)
     {
         $this->oneString($date);
     }
-    
+
     public function oneList($list)
     {
         $this->list = PhpSlim_TypeConverter::listToArray($list);
@@ -290,7 +324,7 @@ class TestModule_TestSlim
     private function checkCall($method, $args)
     {
         if ($this->_expectedMethod == $method &&
-                $this->_expectedArgs == $args) {
+        $this->_expectedArgs == $args) {
             $this->goodCall = true;
             return $this->_expectedReturn;
         }
@@ -310,7 +344,7 @@ class TestModule_TestSlim
     {
         $this->niladWasCalled = true;
     }
-    
+
     public function niladWasCalled()
     {
         return $this->niladWasCalled;
