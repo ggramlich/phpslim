@@ -19,13 +19,14 @@ class PhpSlim_StatementExecutor
     {
         try {
             $className = $this->replaceSymbolsInString($className);
-            $instance = $this->constructInstance(
-                $className, $this->replaceSymbols($constructorArguments)
-            );
-            if ($this->isLibraryName($instanceName)) {
-                $this->_libraries[] = $instance;
+            if (is_object($className)) {
+                $instance = $className;
+            } else {
+                $instance = $this->constructInstance(
+                    $className, $this->replaceSymbols($constructorArguments)
+                );
             }
-            $this->_instances[$instanceName] = $instance;
+            $this->addToInstancesOrLibrary($instanceName, $instance);
             return 'OK';
         } catch (PhpSlim_SlimError $e) {
             return PhpSlim::tagErrorMessage($e->getMessage());
@@ -34,6 +35,14 @@ class PhpSlim_StatementExecutor
         }
     }
 
+    private function addToInstancesOrLibrary($instanceName, $instance)
+    {
+        if ($this->isLibraryName($instanceName)) {
+            $this->_libraries[] = $instance;
+        }
+        $this->_instances[$instanceName] = $instance;
+    }
+    
     private function replaceSymbolsInString($string)
     {
         return $this->_symbolRepository->replaceSymbolsInItem($string);
