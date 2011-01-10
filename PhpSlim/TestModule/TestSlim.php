@@ -26,13 +26,15 @@ class TestModule_TestSlim
 
     private $_constructorArg;
 
-    public function __construct($constructorArg = 0, $stringArg = null)
+    public function __construct($constructorArg = 0, $other = null)
     {
         if (!is_numeric($constructorArg)) {
             throw new Exception('Bad Argument');
         }
         $this->_constructorArg = $constructorArg;
-        $this->stringArg = $stringArg;
+        if (!is_null($other)) {
+            $this->stringArg = $other->stringArg;
+        }
     }
 
     public function toString()
