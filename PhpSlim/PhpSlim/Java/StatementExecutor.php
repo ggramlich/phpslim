@@ -93,13 +93,16 @@ class PhpSlim_Java_StatementExecutor
         return $casted;
     }
 
-    private function toJavaValue($value)
+    private function toJavaValue($value, $inList = false)
     {
         if (is_null($value)) {
             return null;
         }
         if (is_object($value)) {
             return java_closure($value);
+        }
+        if ($inList && is_scalar($value)) {
+            return $value;
         }
         if (is_array($value)) {
             return $this->toJavaList($value);
@@ -116,7 +119,7 @@ class PhpSlim_Java_StatementExecutor
     {
         $javaList = new java("java.util.ArrayList");
         foreach ($values as $value) {
-            $javaList->add($this->toJavaValue($value));
+            $javaList->add($this->toJavaValue($value, true));
         }
         return $javaList;
     }
