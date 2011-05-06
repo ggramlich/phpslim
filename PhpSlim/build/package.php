@@ -5,10 +5,10 @@ if (isset($_SERVER['argv'][2])) {
     $channel = 'pear.php.net';
 }
 
-$api_version     = '1.0.1';
-$release_version = '1.0.1';
-$release_state   = 'stable';
-$release_notes   = <<<EOT
+$apiVersion     = '1.0.1';
+$releaseVersion = '1.0.1';
+$releaseState   = 'stable';
+$releaseNotes   = <<<EOT
 More intelligent handling of some types.
 Added JavaBridge code.
 EOT;
@@ -24,11 +24,11 @@ $director->constructPackage();
 $packageXml = $director->getPackageXml();
 
 // Release data
-$packageXml->setReleaseVersion($release_version);
-$packageXml->setReleaseStability($release_state);
-$packageXml->setAPIVersion($api_version);
-$packageXml->setAPIStability($release_state);
-$packageXml->setNotes($release_notes);
+$packageXml->setReleaseVersion($releaseVersion);
+$packageXml->setReleaseStability($releaseState);
+$packageXml->setAPIVersion($apiVersion);
+$packageXml->setAPIStability($releaseState);
+$packageXml->setNotes($releaseNotes);
 
 $packageXml->generateContents(); // create the <contents> tag
 
@@ -36,7 +36,7 @@ $packageXml->generateContents(); // create the <contents> tag
 // omitting the 'make' param will give you debug info
 if (isset($_SERVER['argv']) && @$_SERVER['argv'][1] == 'make') {
     $packageXml->writePackageFile();
-    file_put_contents('version.txt', 'version = ' . $release_version);
+    file_put_contents('version.txt', 'version = ' . $releaseVersion);
 } else {
     $packageXml->debugPackageFile();
 }

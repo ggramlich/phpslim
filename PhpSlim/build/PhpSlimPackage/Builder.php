@@ -1,37 +1,37 @@
 <?php
 class PhpSlimPackage_Builder
 {
-    protected $channel;
-    protected $packageXml;
-    protected $packageDirectory;
+    public $channel;
+    public $packageXml;
+    public $packageDirectory;
 
-    protected $package = 'PhpSlim';
-    protected $summary = 'Php port of Slim';
-    protected $license = 'PHP License';
-    protected $licenseUrl = 'http://www.php.net/license';
+    public $package = 'PhpSlim';
+    public $summary = 'Php port of Slim';
+    public $license = 'PHP License';
+    public $licenseUrl = 'http://www.php.net/license';
 
-    protected $phpDep = '5.1.2';
-    protected $pearinstallerDep = '1.8.0';
-    protected $extensionDeps = array(
+    public $phpDep = '5.1.2';
+    public $pearinstallerDep = '1.8.0';
+    public $extensionDeps = array(
         'mbstring' => 'required',
         'pcre' => 'required',
         'SPL' => 'required',
         'sockets' => 'required',
     );
 
-    protected $include = array(
+    public $include = array(
         'PhpSlim.php',
         'PhpSlim/*',
         'script/*',
         'README',
     );
 
-    protected $ignore = array(
+    public $ignore = array(
         'FitNesseRoot/*',
         'PhpSlim/Tests/*'
     );
 
-    protected $maintainer = array(
+    public $maintainer = array(
         'lead',
         'ggramlich',
         'Gregor Gramlich',
@@ -39,9 +39,9 @@ class PhpSlimPackage_Builder
     );
 
     // Must override this in the concrete classes
-    protected $apiVersion;
-    protected $releaseVersion;
-    protected $releaseState;
+    public $apiVersion;
+    public $releaseVersion;
+    public $releaseState;
 
     public function __construct($channel, $packageDirectory)
     {
