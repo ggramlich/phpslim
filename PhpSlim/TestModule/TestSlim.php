@@ -37,6 +37,11 @@ class TestModule_TestSlim
         }
     }
 
+    public function getInstance()
+    {
+        return $this;
+    }
+
     public function toString()
     {
         return "TestSlim: " . $this->_constructorArg . ", " . $this->stringArg;
