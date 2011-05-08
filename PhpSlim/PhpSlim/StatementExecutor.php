@@ -57,6 +57,11 @@ class PhpSlim_StatementExecutor
         if ($this->isLibraryName($instanceName)) {
             $this->_libraries[] = $instance;
         }
+        $this->setInstance($instanceName, $instance);
+    }
+
+    public function setInstance($instanceName, $instance)
+    {
         $this->_instances[$instanceName] = $instance;
     }
     
