@@ -13,6 +13,7 @@ class PhpSlim_Tests_AllTests
         'MethodInvocation',
         'ListExecutor',
         'TypeConverter',
+        'SlimHelperLibrary'
     );
 
     public static function suite()

@@ -1,6 +1,8 @@
 <?php
 class PhpSlim_StatementExecutor
 {
+    const SLIM_HELPER_LIBRARY_INSTANCE_NAME = 'SlimHelperLibrary';
+
     private $_instances = array();
     private $_modules = array();
     private $_libraries = array();
@@ -12,8 +14,20 @@ class PhpSlim_StatementExecutor
     public function __construct()
     {
         $this->_symbolRepository = new PhpSlim_SymbolRepository();
+        $this->addSlimHelperLibraryToLibraries();
     }
 
+    private function addSlimHelperLibraryToLibraries()
+    {
+        $slimHelperLibrary = new PhpSlim_SlimHelperLibrary();
+        $slimHelperLibrary->setStatementExecutor($this);
+        
+        $this->addToInstancesOrLibrary(
+            self::SLIM_HELPER_LIBRARY_INSTANCE_NAME,
+            $slimHelperLibrary
+        );
+    }
+    
     public function create($instanceName, $className,
         array $constructorArguments)
     {
@@ -25,6 +39,9 @@ class PhpSlim_StatementExecutor
                 $instance = $this->constructInstance(
                     $className, $this->replaceSymbols($constructorArguments)
                 );
+                if ($instance instanceof PhpSlim_StatementExecutorConsumer) {
+                    $instance->setStatementExecutor($this);
+                }
             }
             $this->addToInstancesOrLibrary($instanceName, $instance);
             return 'OK';
