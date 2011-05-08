@@ -474,8 +474,46 @@ class PhpSlim_SlimError_StopTest extends Exception
 }
 
 
+class PhpSlim_SlimHelperLibrary implements PhpSlim_StatementExecutorConsumer
+{
+    const ACTOR_INSTANCE_NAME = 'scriptTableActor';
+
+    private $_statementExecutor;
+    private $_fixtureStack = array();
+
+    public function setStatementExecutor($statementExecutor)
+    {
+        $this->_statementExecutor = $statementExecutor;
+    }
+    
+    public function getStatementExecutor()
+    {
+        return $this->_statementExecutor;
+    }
+    
+    public function pushFixture()
+    {
+        array_push($this->_fixtureStack, $this->getFixture());
+    }
+
+    public function popFixture()
+    {
+        $fixture = array_pop($this->_fixtureStack);
+        $this->_statementExecutor->setInstance(
+            self::ACTOR_INSTANCE_NAME, $fixture
+        );
+    }
+    
+    public function getFixture()
+    {
+        return $this->_statementExecutor->instance(self::ACTOR_INSTANCE_NAME);
+    }
+}
+
 class PhpSlim_StatementExecutor
 {
+    const SLIM_HELPER_LIBRARY_INSTANCE_NAME = 'SlimHelperLibrary';
+
     private $_instances = array();
     private $_modules = array();
     private $_libraries = array();
@@ -487,8 +525,20 @@ class PhpSlim_StatementExecutor
     public function __construct()
     {
         $this->_symbolRepository = new PhpSlim_SymbolRepository();
+        $this->addSlimHelperLibraryToLibraries();
     }
 
+    private function addSlimHelperLibraryToLibraries()
+    {
+        $slimHelperLibrary = new PhpSlim_SlimHelperLibrary();
+        $slimHelperLibrary->setStatementExecutor($this);
+        
+        $this->addToInstancesOrLibrary(
+            self::SLIM_HELPER_LIBRARY_INSTANCE_NAME,
+            $slimHelperLibrary
+        );
+    }
+    
     public function create($instanceName, $className,
         array $constructorArguments)
     {
@@ -500,6 +550,9 @@ class PhpSlim_StatementExecutor
                 $instance = $this->constructInstance(
                     $className, $this->replaceSymbols($constructorArguments)
                 );
+                if ($instance instanceof PhpSlim_StatementExecutorConsumer) {
+                    $instance->setStatementExecutor($this);
+                }
             }
             $this->addToInstancesOrLibrary($instanceName, $instance);
             return 'OK';
@@ -515,6 +568,11 @@ class PhpSlim_StatementExecutor
         if ($this->isLibraryName($instanceName)) {
             $this->_libraries[] = $instance;
         }
+        $this->setInstance($instanceName, $instance);
+    }
+
+    public function setInstance($instanceName, $instance)
+    {
         $this->_instances[$instanceName] = $instance;
     }
     
@@ -811,6 +869,10 @@ class PhpSlim_StatementExecutor
 
 }
 
+interface PhpSlim_StatementExecutorConsumer
+{
+    public function setStatementExecutor($statementExecutor);
+}
 class PhpSlim_SymbolRepository
 {
     private $_symbols = array();

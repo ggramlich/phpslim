@@ -42,6 +42,8 @@
         <file name="PhpSlim/SlimError/Instantiation.php" />
         <file name="PhpSlim/SlimError/Message.php" />
         <file name="PhpSlim/SlimError/StopTest.php" />
+        <file name="PhpSlim/StatementExecutorConsumer.php" />
+        <file name="PhpSlim/SlimHelperLibrary.php" />
         <file name="getPhpSlimProxy.php" />
     </filelist>
 
