@@ -32,10 +32,10 @@ class PhpSlim_StatementExecutor
         array $constructorArguments)
     {
         try {
-            $className = $this->replaceSymbolsInString($className);
             if (is_object($className)) {
                 $instance = $className;
             } else {
+                $className = $this->replaceSymbolsInString($className);
                 $instance = $this->constructInstance(
                     $className, $this->replaceSymbols($constructorArguments)
                 );
