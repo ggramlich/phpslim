@@ -13,7 +13,7 @@ class PhpSlim_Tests_InstanceCreationTest extends PhpSlim_Tests_TestCase
         $response = $this->_caller->create('x', 'TestModule_TestSlim', array());
         $this->assertEquals('OK', $response);
         $x = $this->_caller->instance('x');
-        $this->assertType('TestModule_TestSlim', $x);
+        $this->assertInstanceOf('TestModule_TestSlim', $x);
     }
 
     public function testCreateAnInstanceWithArguments()
