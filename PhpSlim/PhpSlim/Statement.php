@@ -57,10 +57,12 @@ class PhpSlim_Statement
             case 'callAndAssign':
                 return $this->callAndAssign();
             default:
-                throw new PhpSlim_SlimError_Message(sprintf(
-                    'INVALID_STATEMENT: %s.',
-                    self::inspectArray($this->_statement)
-                ));
+                throw new PhpSlim_SlimError_Message(
+                    sprintf(
+                        'INVALID_STATEMENT: %s.',
+                        self::inspectArray($this->_statement)
+                    )
+                );
             }
         } catch (PhpSlim_SlimError $e) {
             return $this->getErrorRow($e->getMessage());
