@@ -27,14 +27,17 @@ class PhpSlim_Tests_MethodInvocationTest extends PhpSlim_Tests_TestCase
         $this->assertErrorMessage($message, $result);
     }
 
-    public function testCallAMethodThatDoesNotExistOnAClassWithCallOverloadMethod()
+    public function testCallAMethodThatDoesNotExistOnAClassWithCallOverload()
     {
-        $result = $this->_executor->create('testSlimCall', 'TestModule_TestSlimWithCallOverload', array());
+        $className = 'TestModule_TestSlimWithCallOverload';
+        $result = $this->_executor->create('testSlimCall', $className, array());
         $this->assertEquals('OK', $result);
         $testSlimCall = $this->_executor->instance('testSlimCall');
-        $result = $this->_executor->call('testSlimCall', 'unknownMethod', array('a', 'b'));
-        $this->assertEquals('unknownMethod', $testSlimCall->unknownMethodName);
-        $this->assertEquals(array('a', 'b'), $testSlimCall->arguments);
+        $methodName = 'unknownMethod';
+        $args = array('a', 'b');
+        $result = $this->_executor->call('testSlimCall', $methodName, $args);
+        $this->assertEquals($methodName, $testSlimCall->unknownMethodName);
+        $this->assertEquals($args, $testSlimCall->arguments);
     }
 
     public function testCallAMethodThatReturnsAValue()
