@@ -146,6 +146,10 @@ class PhpSlim_StatementExecutor
             $args = (array) $args;
             $callback = $this->getCallback($instanceName, $methodName, $args);
             $method = $this->convertCallbackToReflectionMethod($callback);
+            if ('__call' === $method->getName() && '__call' !== $callback[1]) {
+                $args = array($callback[1], $args);
+                $callback[1] = '__call';
+            }
             $args = $this->replaceSymbols($args);
             $args = $this->convertHashTables($args, $method->getParameters());
             set_error_handler(array($this, 'exceptionErrorHandler'));
@@ -170,7 +174,12 @@ class PhpSlim_StatementExecutor
     {
         assert(is_array($callback) && is_callable($callback));
         $reflectionObject = new ReflectionObject($callback[0]);
-        return $reflectionObject->getMethod($callback[1]);
+        $methodName = $callback[1];
+        if (   true !== $reflectionObject->hasMethod($methodName)
+            && true === $reflectionObject->hasMethod('__call')) {
+            $methodName = '__call';
+        }
+        return $reflectionObject->getMethod($methodName);
     }
 
     private function convertHashTables($args, $parameters)
