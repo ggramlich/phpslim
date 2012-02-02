@@ -146,8 +146,8 @@ class PhpSlim_StatementExecutor
             $args = (array) $args;
             $callback = $this->getCallback($instanceName, $methodName, $args);
             $method = $this->convertCallbackToReflectionMethod($callback);
-            if ('__call' === $method->getName() && '_call' !== $callback[1]) {
-                array_unshift($args, $callback[1]);
+            if ('__call' === $method->getName() && '__call' !== $callback[1]) {
+                $args = array($callback[1], $args);
                 $callback[1] = '__call';
             }
             $args = $this->replaceSymbols($args);
