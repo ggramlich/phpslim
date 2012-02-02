@@ -146,12 +146,11 @@ class PhpSlim_StatementExecutor
             $args = (array) $args;
             $callback = $this->getCallback($instanceName, $methodName, $args);
             $method = $this->convertCallbackToReflectionMethod($callback);
-            if ('__call' === $method->getName() && '__call' !== $callback[1]) {
-                $args = array($callback[1], $args);
-                $callback[1] = '__call';
-            }
             $args = $this->replaceSymbols($args);
             $args = $this->convertHashTables($args, $method->getParameters());
+            if ('__call' === $method->getName()) {
+                $args = array($callback[1], $args);
+            }
             set_error_handler(array($this, 'exceptionErrorHandler'));
             $result = $method->invokeArgs($callback[0], $args);
             restore_error_handler();
@@ -175,8 +174,9 @@ class PhpSlim_StatementExecutor
         assert(is_array($callback) && is_callable($callback));
         $reflectionObject = new ReflectionObject($callback[0]);
         $methodName = $callback[1];
-        if (   true !== $reflectionObject->hasMethod($methodName)
-            && true === $reflectionObject->hasMethod('__call')) {
+        if (!$reflectionObject->hasMethod($methodName)) {
+            // If the callback is callable, but the object has no method with
+            // that name, then there must be a __call method
             $methodName = '__call';
         }
         return $reflectionObject->getMethod($methodName);
