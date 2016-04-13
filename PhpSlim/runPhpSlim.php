@@ -15,14 +15,14 @@ class __PhpSlimBootStrap
             die('The -b option must be followed by a filename '
                 . "and preceed include path and port number.\n");
         }
-        $boostrapFile = $args[$key + 1];
-        if (!is_readable($boostrapFile)) {
+        $bootstrapFile = realpath($args[$key + 1]);
+        if (!is_readable($bootstrapFile)) {
             $message = sprintf(
                 "The specified bootstrap file %s is not readable.\n",
-                $boostrapFile
+                $bootstrapFile
             );
             die($message);
         }
-        include $boostrapFile;
+        include $bootstrapFile;
     }
 }
