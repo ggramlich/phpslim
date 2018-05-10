@@ -328,7 +328,7 @@ class PhpSlim_StatementExecutor
     {
         $parts = preg_split('/\.|\:\:|\_/', $className);
         $converted = array_map('ucfirst', $parts);
-        return implode('_', $converted);
+        return implode('\\', $converted);
     }
 
     /**
