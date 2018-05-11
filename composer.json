@@ -1,0 +1,15 @@
+{
+  "name": "ggramlich/PHPSlim",
+  "description": "PHP Slim port for Fitnesse",
+  "keywords": ["PHP", "slim", "tests", "fitnesse"],
+  "license": "",
+  "authors": [
+    {
+      "name": "Gregor Gramlich",
+      "email": "gramlich@eosc.de"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.0"
+  }
+}
